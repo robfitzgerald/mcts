@@ -5,22 +5,22 @@ import java.time.Instant
 import cse.fitzgero.mcts.core._
 import cse.fitzgero.mcts.example.TicTacToe.Board._
 import cse.fitzgero.mcts.example.TicTacToe._
-import cse.fitzgero.mcts.math.Distribution
+import cse.fitzgero.mcts.math.{DoublePrecisionDistribution, Observation}
 import cse.fitzgero.mcts.variant._
 
 
-class TicTacToeDistributionSolver(
+class TicTacToeDistributionUCTSolver(
                       seed: Long = 0L,
-                      duration: Long = 5000L) extends RewardDistributionStandardMCTS[Board, Move] {
+                      duration: Long = 5000L) extends RewardDistributionMCTS[Board, Move] {
 
   override def applyAction(state: Board, action: Move): Board = state.applyMove(action)
 
   // we are creating the best move set for X
-  override def evaluateTerminal(state: Board): Distribution =
+  override def evaluateTerminal(state: Board): DoublePrecisionDistribution =
     Board.gameState(state) match {
-      case Stalemate => Distribution(0D)
-      case XWins => Distribution(1D) // if (state.currentPlayer == X) 1D else 0D
-      case OWins => Distribution(0D) // if (state.currentPlayer == O) 1D else 0D
+      case Stalemate => Observation(0D)
+      case XWins => Observation(1D) // if (state.currentPlayer == X) 1D else 0D
+      case OWins => Observation(0D) // if (state.currentPlayer == O) 1D else 0D
       case _ => throw new IllegalStateException("evaluating a non-terminal board state")
     }
 
@@ -45,8 +45,8 @@ class TicTacToeDistributionSolver(
 
 }
 
-object TicTacToeDistributionSolver {
-  def apply(): TicTacToeDistributionSolver = new TicTacToeDistributionSolver()
-  def apply(seed: Long, duration: Long, Cp: Double): TicTacToeDistributionSolver =
-    new TicTacToeDistributionSolver(seed, duration)
+object TicTacToeDistributionUCTSolver {
+  def apply(): TicTacToeDistributionUCTSolver = new TicTacToeDistributionUCTSolver()
+  def apply(seed: Long, duration: Long, Cp: Double): TicTacToeDistributionUCTSolver =
+    new TicTacToeDistributionUCTSolver(seed, duration)
 }

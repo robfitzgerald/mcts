@@ -58,7 +58,7 @@ trait MonteCarloTree[S,A,R,N <: MonteCarloTree[S,A,R,N]] {
     * implemented by the subclass, should call "update reward" and pass a lambda to compare and optionally pass a new reward value to set
     * @param reward the reward value of the user's reward type
     */
-  def update[T](reward: T): Unit
+  def update(reward: R): Unit
 
   /**
     * adds a tree node to the children of this node

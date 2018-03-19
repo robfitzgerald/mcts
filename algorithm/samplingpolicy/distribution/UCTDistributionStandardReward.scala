@@ -2,11 +2,11 @@ package cse.fitzgero.mcts.algorithm.samplingpolicy.distribution
 
 import cse.fitzgero.mcts.MonteCarloTreeSearch
 import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.UCT
-import cse.fitzgero.mcts.math.Distribution
+import cse.fitzgero.mcts.math.{Distribution, DoublePrecisionDistribution, Observation}
 
 trait UCTDistributionStandardReward[S,A] extends MonteCarloTreeSearch[S,A] {
   self: {
-    type Reward = Distribution
+    type Reward = DoublePrecisionDistribution
   } =>
 
   /**
@@ -36,13 +36,6 @@ trait UCTDistributionStandardReward[S,A] extends MonteCarloTreeSearch[S,A] {
       node.visits,
       parentVisits,
       c.Cp)
-    Distribution(uct)
+    Observation(uct)
   }
 }
-
-
-//
-//object UCTScalarStandardReward {
-//  case class Coefficients(Cp: Double)
-//  def apply[S,A](): UCTScalarStandardReward[S,A] = new UCTScalarStandardReward[S,A]
-//}

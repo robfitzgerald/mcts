@@ -1,6 +1,6 @@
 package cse.fitzgero.mcts.tree
 
-import cse.fitzgero.mcts.math.Distribution
+import cse.fitzgero.mcts.math._
 
 /**
   * standard Monte Carlo Tree, storing a Reward as a Double.
@@ -13,14 +13,15 @@ import cse.fitzgero.mcts.math.Distribution
 class MCTreeWithDistribution[S, A] (
   override val action: Option[A],
   override val state: S
-)extends MonteCarloTree [S,A,Distribution,MCTreeWithDistribution[S, A]]{
-  var reward: Distribution = Distribution()
-  override def update[T](reward: T): Unit = reward match {
-    case x: Double => updateReward((r: Distribution) => Some(r + x))
-    case x: Distribution =>
-      if (x.count > 1)
-        println("[WARN] shouldn't be adding a Distribution with count > 1 - that goes to ++. eventually, have a Distribution sealed trait with a case class that represents Observation (1 observation).")
-      updateReward((r: Distribution) => Some(r + x))
+)extends MonteCarloTree [S,A,DoublePrecisionDistribution,MCTreeWithDistribution[S, A]]{
+  var reward: DoublePrecisionDistribution = RunningDistribution()
+  override def update(reward: DoublePrecisionDistribution): Unit = reward match {
+    case obs: Observation =>
+      updateReward((r: DoublePrecisionDistribution) =>
+        r match {
+          case dist: RunningDistribution => Some(dist + obs)
+          case storedObs: Observation => Some(RunningDistribution() + storedObs + obs) // shouldn't happen
+        })
     case _ => ()
   }
 }

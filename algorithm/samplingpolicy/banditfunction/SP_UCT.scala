@@ -1,9 +1,9 @@
 package cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction
 
-import cse.fitzgero.mcts.math.Distribution
+import cse.fitzgero.mcts.math.{Distribution, DoublePrecisionDistribution, Observation}
 
 object SP_UCT {
-  def apply(reward: Distribution, childVisits: Long, parentVisits: Long, Cp: Double, D: Double): Distribution = {
+  def apply(reward: DoublePrecisionDistribution, childVisits: Long, parentVisits: Long, Cp: Double, D: Double): Observation = {
 
     val exploitation: Double =
       if (childVisits == 0)
@@ -23,14 +23,13 @@ object SP_UCT {
         2 * Cp * math.sqrt((2.0D * math.log(parentVisits)) / childVisits)
 
     val possibleDeviation: Double = {
-      val variance = reward.sampleVariance.getOrElse(0D)
+      val variance = reward.variance.getOrElse(0D)
       if (childVisits == 0)
         0D
       else
         math.sqrt(variance + (D / childVisits))
     }
 
-    // TODO: this is an Observation
-    Distribution(exploitation + exploration + possibleDeviation)
+    Observation(exploitation + exploration + possibleDeviation)
   }
 }

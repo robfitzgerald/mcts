@@ -5,26 +5,26 @@ import cse.fitzgero.mcts.algorithm.backup.StandardBackup
 import cse.fitzgero.mcts.algorithm.bestchild.StandardBestChild
 import cse.fitzgero.mcts.algorithm.defaultpolicy.StandardDefaultPolicy
 import cse.fitzgero.mcts.algorithm.expand.StandardExpand
-import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.UCTDistributionStandardReward
+import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.SPMCTSDistributionReward
 import cse.fitzgero.mcts.algorithm.treepolicy.StandardTreePolicy
-import cse.fitzgero.mcts.math.Distribution
+import cse.fitzgero.mcts.math.DoublePrecisionDistribution
 import cse.fitzgero.mcts.tree._
 
-trait RewardDistributionStandardMCTS[S,A] extends MonteCarloTreeSearch[S,A]
+trait RewardDistributionSPMCTS[S,A] extends MonteCarloTreeSearch[S,A]
                                   with StandardBestChild[S,A]
                                   with StandardTreePolicy[S,A]
                                   with StandardDefaultPolicy[S,A]
                                   with StandardBackup[S,A]
                                   with StandardExpand[S,A]
-                                  with UCTDistributionStandardReward[S,A] {
+                                  with SPMCTSDistributionReward[S,A] {
 
-  final override type Reward = Distribution
+  final override type Reward = DoublePrecisionDistribution
 
   /**
     * user can override this ordering. orderings for Distribution can be found in it's companion object.
     * @return
     */
-  override def rewardOrdering: Ordering[Distribution] = Distribution.distributionByMaxOrdering
+  override val rewardOrdering: Ordering[DoublePrecisionDistribution] = DoublePrecisionDistribution.distributionByMeanOrdering
 
   final override type Tree = MCTreeWithDistribution[S,A]
 

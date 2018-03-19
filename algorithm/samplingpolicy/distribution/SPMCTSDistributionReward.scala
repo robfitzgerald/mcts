@@ -2,12 +2,11 @@ package cse.fitzgero.mcts.algorithm.samplingpolicy.distribution
 
 import cse.fitzgero.mcts.MonteCarloTreeSearch
 import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.SP_UCT
-import cse.fitzgero.mcts.math.Distribution
-import cse.fitzgero.mcts.tree.MCTreeWithDistribution
+import cse.fitzgero.mcts.math.{DoublePrecisionDistribution, Observation}
 
 trait SPMCTSDistributionReward[S,A] extends MonteCarloTreeSearch[S,A] {
   self: {
-    type Reward = Distribution
+    type Reward = DoublePrecisionDistribution
   } =>
 
   /**
@@ -16,6 +15,11 @@ trait SPMCTSDistributionReward[S,A] extends MonteCarloTreeSearch[S,A] {
     * @param D variance parameter, an integer. paper suggests exploitation value of 32, exploration value of 20000
     */
   case class Coefficients (Cp: Double, D: Double)
+
+  // taken from M.P.D. Schadd et. al, 2008, for their single player game with rewards in the range [0,1]
+  val Exploitation = Coefficients(0.1, 32)
+  val Balanced = Coefficients(0.5, 10000)
+  val Exploration = Coefficients(1, 20000)
 
   /**
     * Upper Confidence Bound For Trees sampling method
