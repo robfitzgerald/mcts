@@ -17,7 +17,10 @@ class MCTreeWithDistribution[S, A] (
   var reward: Distribution = Distribution()
   override def update[T](reward: T): Unit = reward match {
     case x: Double => updateReward((r: Distribution) => Some(r + x))
-    case x: Distribution => println("[WARN] attempting to update a Distribution reward with another distribution but Distribution ++ Distribution is not yet defined")
+    case x: Distribution =>
+      if (x.count > 1)
+        println("[WARN] shouldn't be adding a Distribution with count > 1 - that goes to ++. eventually, have a Distribution sealed trait with a case class that represents Observation (1 observation).")
+      updateReward((r: Distribution) => Some(r + x))
     case _ => ()
   }
 }

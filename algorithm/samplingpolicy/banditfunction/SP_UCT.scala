@@ -11,7 +11,7 @@ object SP_UCT {
       else
         reward.mean match {
           case None => 0D
-          case Some(mean) => mean / childVisits.toDouble
+          case Some(mean) => mean
         }
 
     val exploration: Double =
@@ -30,6 +30,7 @@ object SP_UCT {
         math.sqrt(variance + (D / childVisits))
     }
 
+    // TODO: this is an Observation
     Distribution(exploitation + exploration + possibleDeviation)
   }
 }

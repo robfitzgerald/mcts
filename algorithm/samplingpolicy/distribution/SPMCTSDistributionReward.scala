@@ -36,8 +36,3 @@ trait SPMCTSDistributionReward[S,A] extends MonteCarloTreeSearch[S,A] {
     )
   }
 }
-
-//object SPMCTSDistributionReward {
-//  case class Coefficients(Cp: Double, D: Double)
-//  def apply[S,A](): SPMCTSDistributionReward[S,A] = new SPMCTSDistributionReward[S,A]
-//}
