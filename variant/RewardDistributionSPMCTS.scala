@@ -20,10 +20,6 @@ trait RewardDistributionSPMCTS[S,A] extends MonteCarloTreeSearch[S,A]
 
   final override type Reward = DoublePrecisionDistribution
 
-  /**
-    * user can override this ordering. orderings for Distribution can be found in it's companion object.
-    * @return
-    */
   override val rewardOrdering: Ordering[DoublePrecisionDistribution] = DoublePrecisionDistribution.distributionByMeanOrdering
 
   final override type Tree = MCTreeWithDistribution[S,A]

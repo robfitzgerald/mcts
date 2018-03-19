@@ -7,7 +7,7 @@ import cse.fitzgero.mcts.example.TicTacToe.Board._
 import cse.fitzgero.mcts.example.TicTacToe._
 import cse.fitzgero.mcts.math.{DoublePrecisionDistribution, Observation}
 import cse.fitzgero.mcts.variant._
-
+import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.SPMCTSDistributionReward._
 
 class TicTacToeDistributionSP_UCTSolver(
                       seed: Long = 0L,
@@ -24,8 +24,8 @@ class TicTacToeDistributionSP_UCTSolver(
       case _ => throw new IllegalStateException("evaluating a non-terminal board state")
     }
 
-  def getDecisionCoefficients(tree: Tree): Coefficients = Exploration
-  def getSearchCoefficients(tree: Tree): Coefficients = Coefficients(0D,0D)
+  def getSearchCoefficients(tree: Tree): Coefficients = Balanced
+  def getDecisionCoefficients(tree: Tree): Coefficients = Coefficients(0D,0D)
 
   override def generatePossibleActions(state: Board): Seq[Move] = Board.possibleMoves(state)
 
@@ -47,6 +47,6 @@ class TicTacToeDistributionSP_UCTSolver(
 
 object TicTacToeDistributionSP_UCTSolver {
   def apply(): TicTacToeDistributionSP_UCTSolver = new TicTacToeDistributionSP_UCTSolver()
-  def apply(seed: Long, duration: Long): TicTacToeDistributionSP_UCTSolver =
+  def apply(seed: Long, duration: Long, coefficients: Coefficients): TicTacToeDistributionSP_UCTSolver =
     new TicTacToeDistributionSP_UCTSolver(seed, duration)
 }

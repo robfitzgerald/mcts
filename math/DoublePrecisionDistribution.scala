@@ -1,19 +1,22 @@
 package cse.fitzgero.mcts.math
 
-sealed trait DoublePrecisionDistribution extends Distribution[Double]
+sealed trait DoublePrecisionDistribution extends Any with Distribution[Double]
 
 /**
-  * represents a single observation
+  * value class representing a single observation
   * @param value the observation value
   */
-case class Observation(value: Double) extends DoublePrecisionDistribution {
+class Observation(val value: Double) extends AnyVal with DoublePrecisionDistribution {
   def isEmpty = false
-  lazy val min: Option[Double] = Some(value)
-  lazy val max: Option[Double] = Some(value)
-  lazy val mean: Option[Double] = Some(value)
-  lazy val variance: Option[Double] = Some(0D)
-  lazy val standardDeviation: Option[Double] = Some(0D)
-  val count = 1
+  def min: Option[Double] = Some(value)
+  def max: Option[Double] = Some(value)
+  def mean: Option[Double] = Some(value)
+  def variance: Option[Double] = Some(0D)
+  def standardDeviation: Option[Double] = Some(0D)
+  def count = 1
+}
+object Observation {
+  def apply(value: Double): Observation = new Observation(value)
 }
 
 /**
@@ -117,11 +120,12 @@ case class RunningDistribution (
 
 object DoublePrecisionDistribution {
   //  variance scaled by 1000 so the coercion to Int does not strip all meaning from variance values
-  private val epsilon = 1000D
+  // thus, our epsilon is 1/epsilonDenominator
+  private val epsilonDenominator = 1000D
 
-  val distributionByMaxOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by{ d: DoublePrecisionDistribution => d.max match { case None => Int.MinValue; case Some(max) => max.toInt } }
-  val distributionByMinOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by{ d: DoublePrecisionDistribution => d.min match { case None => Int.MinValue; case Some(min) => min.toInt } }
-  val distributionByMeanOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by{ d: DoublePrecisionDistribution => d.mean match { case None => Int.MinValue; case Some(mean) => mean.toInt } }
+  val distributionByMaxOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by{ d: DoublePrecisionDistribution => d.max match { case None => Int.MinValue; case Some(max) => (epsilonDenominator * max).toInt } }
+  val distributionByMinOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by{ d: DoublePrecisionDistribution => d.min match { case None => Int.MinValue; case Some(min) => (epsilonDenominator * min).toInt } }
+  val distributionByMeanOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by{ d: DoublePrecisionDistribution => d.mean match { case None => Int.MinValue; case Some(mean) => (epsilonDenominator * mean).toInt } }
 
   /**
     * use this ordering when higher means and tighter variance is desired
@@ -133,7 +137,7 @@ object DoublePrecisionDistribution {
         for {
           mean <- d.mean
           variance <- d.variance
-        } yield (mean.toInt, (-epsilon * variance).toInt)
+        } yield (mean.toInt, (-epsilonDenominator * variance).toInt)
       } match {
         case None => (Int.MinValue, Int.MinValue)
         case Some(tuple) => tuple
@@ -149,7 +153,7 @@ object DoublePrecisionDistribution {
         for {
           mean <- d.mean
           variance <- d.variance
-        } yield (-mean.toInt, (-epsilon * variance).toInt)
+        } yield (-mean.toInt, (-epsilonDenominator * variance).toInt)
       } match {
         case None => (Int.MinValue, Int.MinValue)
         case Some(tuple) => tuple

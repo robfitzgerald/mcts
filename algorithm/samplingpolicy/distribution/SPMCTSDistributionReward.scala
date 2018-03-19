@@ -9,17 +9,7 @@ trait SPMCTSDistributionReward[S,A] extends MonteCarloTreeSearch[S,A] {
     type Reward = DoublePrecisionDistribution
   } =>
 
-  /**
-    * coefficients for the SP_UCT algorithm
-    * @param Cp exploration parameter, typically 1 over root 2, exploitation around 0.1, exploration around 1
-    * @param D variance parameter, an integer. paper suggests exploitation value of 32, exploration value of 20000
-    */
-  case class Coefficients (Cp: Double, D: Double)
-
-  // taken from M.P.D. Schadd et. al, 2008, for their single player game with rewards in the range [0,1]
-  val Exploitation = Coefficients(0.1, 32)
-  val Balanced = Coefficients(0.5, 10000)
-  val Exploration = Coefficients(1, 20000)
+  override type Coefficients = SPMCTSDistributionReward.Coefficients
 
   /**
     * Upper Confidence Bound For Trees sampling method
@@ -39,4 +29,18 @@ trait SPMCTSDistributionReward[S,A] extends MonteCarloTreeSearch[S,A] {
       coefficients.D
     )
   }
+}
+
+object SPMCTSDistributionReward {
+  /**
+    * coefficients for the SP_UCT algorithm
+    * @param Cp exploration parameter, typically 1 over root 2, exploitation around 0.1, exploration around 1
+    * @param D variance parameter, an integer. paper suggests exploitation value of 32, exploration value of 20000
+    */
+  case class Coefficients (Cp: Double, D: Double)
+
+  // taken from M.P.D. Schadd et. al, 2008, for their single player game with rewards in the range [0,1]
+  val Exploitation = Coefficients(0.1, 32)
+  val Balanced = Coefficients(0.5, 10000)
+  val Exploration = Coefficients(1, 20000)
 }

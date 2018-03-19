@@ -1,6 +1,6 @@
 package cse.fitzgero.mcts.math
 
-trait Distribution[T]{
+trait Distribution[T] extends Any {
   def isEmpty: Boolean
   def min: Option[T]
   def max: Option[T]

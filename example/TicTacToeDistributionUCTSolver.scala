@@ -24,8 +24,8 @@ class TicTacToeDistributionUCTSolver(
       case _ => throw new IllegalStateException("evaluating a non-terminal board state")
     }
 
-  def getDecisionCoefficients(tree: Tree): Coefficients = Coefficients()
-  def getSearchCoefficients(tree: Tree): Coefficients = Coefficients(0D)
+  def getDecisionCoefficients(tree: Tree): Coefficients = Coefficients(0D)
+  def getSearchCoefficients(tree: Tree): Coefficients = Coefficients()
 
   override def generatePossibleActions(state: Board): Seq[Move] = Board.possibleMoves(state)
 

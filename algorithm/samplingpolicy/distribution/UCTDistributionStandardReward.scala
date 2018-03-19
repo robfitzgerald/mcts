@@ -2,7 +2,7 @@ package cse.fitzgero.mcts.algorithm.samplingpolicy.distribution
 
 import cse.fitzgero.mcts.MonteCarloTreeSearch
 import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.UCT
-import cse.fitzgero.mcts.math.{Distribution, DoublePrecisionDistribution, Observation}
+import cse.fitzgero.mcts.math.{DoublePrecisionDistribution, Observation}
 
 trait UCTDistributionStandardReward[S,A] extends MonteCarloTreeSearch[S,A] {
   self: {
