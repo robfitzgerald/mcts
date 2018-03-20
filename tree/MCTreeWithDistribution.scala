@@ -1,6 +1,6 @@
 package cse.fitzgero.mcts.tree
 
-import cse.fitzgero.mcts.math._
+import cse.fitzgero.mcts.distribution._
 
 /**
   * standard Monte Carlo Tree, storing a Reward as a Double.

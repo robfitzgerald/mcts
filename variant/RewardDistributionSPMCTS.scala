@@ -5,9 +5,9 @@ import cse.fitzgero.mcts.algorithm.backup.StandardBackup
 import cse.fitzgero.mcts.algorithm.bestchild.StandardBestChild
 import cse.fitzgero.mcts.algorithm.defaultpolicy.StandardDefaultPolicy
 import cse.fitzgero.mcts.algorithm.expand.StandardExpand
-import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.SPMCTSDistributionReward
+import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.UCTDistributionSPMCTSReward
 import cse.fitzgero.mcts.algorithm.treepolicy.StandardTreePolicy
-import cse.fitzgero.mcts.math.DoublePrecisionDistribution
+import cse.fitzgero.mcts.distribution.DoublePrecisionDistribution
 import cse.fitzgero.mcts.tree._
 
 trait RewardDistributionSPMCTS[S,A] extends MonteCarloTreeSearch[S,A]
@@ -16,7 +16,7 @@ trait RewardDistributionSPMCTS[S,A] extends MonteCarloTreeSearch[S,A]
                                   with StandardDefaultPolicy[S,A]
                                   with StandardBackup[S,A]
                                   with StandardExpand[S,A]
-                                  with SPMCTSDistributionReward[S,A] {
+                                  with UCTDistributionSPMCTSReward[S,A] {
 
   final override type Reward = DoublePrecisionDistribution
 

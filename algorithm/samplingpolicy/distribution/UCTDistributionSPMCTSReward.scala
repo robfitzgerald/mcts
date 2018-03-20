@@ -2,14 +2,14 @@ package cse.fitzgero.mcts.algorithm.samplingpolicy.distribution
 
 import cse.fitzgero.mcts.MonteCarloTreeSearch
 import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.SP_UCT
-import cse.fitzgero.mcts.math.{DoublePrecisionDistribution, Observation}
+import cse.fitzgero.mcts.distribution.{DoublePrecisionDistribution, Observation}
 
-trait SPMCTSDistributionReward[S,A] extends MonteCarloTreeSearch[S,A] {
+trait UCTDistributionSPMCTSReward[S,A] extends MonteCarloTreeSearch[S,A] {
   self: {
     type Reward = DoublePrecisionDistribution
   } =>
 
-  override type Coefficients = SPMCTSDistributionReward.Coefficients
+  override type Coefficients = UCTDistributionSPMCTSReward.Coefficients
 
   /**
     * Upper Confidence Bound For Trees sampling method
@@ -31,7 +31,7 @@ trait SPMCTSDistributionReward[S,A] extends MonteCarloTreeSearch[S,A] {
   }
 }
 
-object SPMCTSDistributionReward {
+object UCTDistributionSPMCTSReward {
   /**
     * coefficients for the SP_UCT algorithm
     * @param Cp exploration parameter, typically 1 over root 2, exploitation around 0.1, exploration around 1

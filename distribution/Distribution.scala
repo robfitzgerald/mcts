@@ -1,4 +1,4 @@
-package cse.fitzgero.mcts.math
+package cse.fitzgero.mcts.distribution
 
 trait Distribution[T] extends Any {
   def isEmpty: Boolean

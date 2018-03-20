@@ -5,9 +5,9 @@ import java.time.Instant
 import cse.fitzgero.mcts.core._
 import cse.fitzgero.mcts.example.TicTacToe.Board._
 import cse.fitzgero.mcts.example.TicTacToe._
-import cse.fitzgero.mcts.math.{DoublePrecisionDistribution, Observation}
+import cse.fitzgero.mcts.distribution.{DoublePrecisionDistribution, Observation}
 import cse.fitzgero.mcts.variant._
-import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.SPMCTSDistributionReward._
+import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.UCTDistributionSPMCTSReward._
 
 class TicTacToeDistributionSP_UCTSolver(
                       seed: Long = 0L,

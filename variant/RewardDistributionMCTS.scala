@@ -7,7 +7,7 @@ import cse.fitzgero.mcts.algorithm.defaultpolicy.StandardDefaultPolicy
 import cse.fitzgero.mcts.algorithm.expand.StandardExpand
 import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.UCTDistributionStandardReward
 import cse.fitzgero.mcts.algorithm.treepolicy.StandardTreePolicy
-import cse.fitzgero.mcts.math.DoublePrecisionDistribution
+import cse.fitzgero.mcts.distribution.DoublePrecisionDistribution
 import cse.fitzgero.mcts.tree._
 
 trait RewardDistributionMCTS[S,A] extends MonteCarloTreeSearch[S,A]

@@ -5,7 +5,7 @@ import java.time.Instant
 import cse.fitzgero.mcts.core._
 import cse.fitzgero.mcts.example.TicTacToe.Board._
 import cse.fitzgero.mcts.example.TicTacToe._
-import cse.fitzgero.mcts.math.{DoublePrecisionDistribution, Observation}
+import cse.fitzgero.mcts.distribution.{DoublePrecisionDistribution, Observation}
 import cse.fitzgero.mcts.variant._
 
 

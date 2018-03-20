@@ -1,4 +1,4 @@
-package cse.fitzgero.mcts.math
+package cse.fitzgero.mcts.distribution
 
 sealed trait DoublePrecisionDistribution extends Any with Distribution[Double]
 
@@ -14,6 +14,8 @@ class Observation(val value: Double) extends AnyVal with DoublePrecisionDistribu
   def variance: Option[Double] = Some(0D)
   def standardDeviation: Option[Double] = Some(0D)
   def count = 1
+
+  override def toString: String = s"Observation($value)"
 }
 object Observation {
   def apply(value: Double): Observation = new Observation(value)
