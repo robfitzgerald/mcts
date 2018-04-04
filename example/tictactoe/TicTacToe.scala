@@ -1,4 +1,4 @@
-package cse.fitzgero.mcts.example
+package cse.fitzgero.mcts.example.tictactoe
 
 object TicTacToe {
   sealed trait Piece

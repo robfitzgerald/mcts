@@ -14,6 +14,8 @@ trait UCTScalarStandardReward[S,A] extends MonteCarloTreeSearch[S,A] {
     * @param Cp exploration parameter, typically in the range [0,1] for rewards in the same range
     */
   case class Coefficients (Cp: Double)
+  val ExplorationCoefficient = Coefficients(0.707D)
+  val SearchCoefficient = Coefficients(0D)
 
   /**
     * Upper Confidence Bound For Trees sampling method

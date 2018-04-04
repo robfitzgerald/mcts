@@ -1,13 +1,13 @@
-package cse.fitzgero.mcts.example
+package cse.fitzgero.mcts.example.tictactoe
 
 import java.time.Instant
 
-import cse.fitzgero.mcts.core._
-import cse.fitzgero.mcts.example.TicTacToe.Board._
-import cse.fitzgero.mcts.example.TicTacToe._
-import cse.fitzgero.mcts.distribution.{DoublePrecisionDistribution, Observation}
-import cse.fitzgero.mcts.variant._
 import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.UCTDistributionSPMCTSReward._
+import cse.fitzgero.mcts.core._
+import cse.fitzgero.mcts.distribution.{DoublePrecisionDistribution, Observation}
+import cse.fitzgero.mcts.example.tictactoe.TicTacToe.Board._
+import cse.fitzgero.mcts.example.tictactoe.TicTacToe._
+import cse.fitzgero.mcts.variant._
 
 class TicTacToeDistributionSP_UCTSolver(
                       seed: Long = 0L,
@@ -47,6 +47,6 @@ class TicTacToeDistributionSP_UCTSolver(
 
 object TicTacToeDistributionSP_UCTSolver {
   def apply(): TicTacToeDistributionSP_UCTSolver = new TicTacToeDistributionSP_UCTSolver()
-  def apply(seed: Long, duration: Long, coefficients: Coefficients): TicTacToeDistributionSP_UCTSolver =
+  def apply(seed: Long, duration: Long): TicTacToeDistributionSP_UCTSolver =
     new TicTacToeDistributionSP_UCTSolver(seed, duration)
 }
