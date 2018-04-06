@@ -6,8 +6,17 @@ object MCKDV {
   def costsOf(xs: Seq[HasCost]): Int = xs.map{_.cost}.sum
 
   case class Dependency(cost: Int, dst: Choice) extends HasCost
-  case class Choice(cost: Int) extends HasCost
+  case class Choice(label: Int, cost: Int) extends HasCost
+
+  /**
+    * A Problem is a multiset of Choices
+    */
+  type Dependencies = Map[Choice, List[Dependency]]
+  type Multiset = Set[Set[Choice]]
+  type Problem = (Multiset, Dependencies)
   type Selection = Map[Choice, List[Dependency]]
+
+
 
   def costOfSelection(selection: Selection): Int = {
     val allDependencies: Int = (
