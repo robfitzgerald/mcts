@@ -3,33 +3,32 @@ package cse.fitzgero.mcts.example.mckdv
 object MCKDV {
 
   trait HasCost { def cost: Int }
-  def costsOf(xs: Seq[HasCost]): Int = xs.map{_.cost}.sum
+  def costsOf(xs: Seq[HasCost]): BigDecimal = xs.map{n => BigDecimal.decimal(n.cost)}.sum
 
-  case class Dependency(cost: Int, dst: Choice) extends HasCost
-  case class Choice(label: Int, cost: Int) extends HasCost
+  case class Dependency(cost: Int, dst: Choice) extends HasCost {
+    override def toString: String = s"Dependency(cost=$cost, dst=$dst)"
+  }
+  case class Choice(label: Int, cost: Int) extends HasCost {
+    override def toString: String = s"Choice(label=$label, cost=$cost)"
+  }
 
-  /**
-    * A Problem is a multiset of Choices
-    */
   type Dependencies = Map[Choice, List[Dependency]]
   type Multiset = Set[Set[Choice]]
   type Problem = (Multiset, Dependencies)
-  type Selection = Map[Choice, List[Dependency]]
+  type Selection = Set[Choice]
 
+  implicit class ProblemOps(p: Problem) {
+    def multiset: Multiset = p._1
+    def dependencies: Dependencies = p._2
+  }
 
-
-  def costOfSelection(selection: Selection): Int = {
-    val allDependencies: Int = (
-      for {
-        sel <- selection
-        dep <- sel._2
-        if selection.isDefinedAt(dep.dst)
-      } yield dep.cost
-    ).sum
-    val baseCost: Int = selection.foldLeft(0){
-      (acc, sel) =>
-        acc + sel._1.cost
-    }
-    baseCost + allDependencies
+  def costOfSelection(selection: Selection, dependencies: Dependencies): BigDecimal = {
+    val baseChoiceCosts: BigDecimal = costsOf(selection.toList)
+    val depsCosts: BigDecimal = selection.toList.map {
+      choice =>
+        val deps = dependencies(choice).filter{dep => selection(dep.dst)}
+        costsOf(deps)
+    }.sum
+    baseChoiceCosts + depsCosts
   }
 }
