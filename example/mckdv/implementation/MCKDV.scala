@@ -1,4 +1,4 @@
-package cse.fitzgero.mcts.example.mckdv
+package cse.fitzgero.mcts.example.mckdv.implementation
 
 object MCKDV {
 

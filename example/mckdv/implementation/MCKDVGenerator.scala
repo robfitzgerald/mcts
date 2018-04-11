@@ -1,11 +1,14 @@
-package cse.fitzgero.mcts.example.mckdv
+package cse.fitzgero.mcts.example.mckdv.implementation
 
 //import org.scalacheck._
 //import Gen._
 //import Arbitrary.arbitrary
 
-import cse.fitzgero.mcts.example.mckdv.MCKDV._
+import cse.fitzgero.mcts.example.mckdv.implementation.MCKDV._
 
+/**
+  * generates Multiple Choice Knapsack Problems with Dependent Values
+  */
 trait MCKDVGenerator {
 
   def random: scala.util.Random

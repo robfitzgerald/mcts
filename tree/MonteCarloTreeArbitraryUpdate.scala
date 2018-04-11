@@ -7,9 +7,11 @@ import scala.collection.GenMap
   * @tparam S a state type
   * @tparam A an action type (typically an ADT)
   * @tparam R a reward type (for default MCTS, that would be a real number)
+  * @tparam U an update type, which is the type of the simulation result
+  * @tparam C a coefficient type, which can be used to guide updates
   * @tparam N the derived type (F-Bounded Polymorphic type)
   */
-trait MonteCarloTree[S,A,R,N <: MonteCarloTree[S,A,R,N]] {
+trait MonteCarloTreeArbitraryUpdate[S,A,R,U,C,N <: MonteCarloTreeArbitraryUpdate[S,A,R,U,C,N]] {
 
   ////// user defined values
   // these are idempotent throughout the lifetime of the tree
@@ -43,22 +45,10 @@ trait MonteCarloTree[S,A,R,N <: MonteCarloTree[S,A,R,N]] {
   }
 
   /**
-    * updates the reward value at this node in the tree
-    * @param rewardUpdate a function that takes this reward, and compares it with another, and returns an update if necessary
-    */
-  private[tree] def updateReward(rewardUpdate: (R) => Option[R]): Unit = {
-    this.visits += 1
-    rewardUpdate(reward) match {
-      case Some(newReward) => reward = newReward
-      case None => ()
-    }
-  }
-
-  /**
     * implemented by the subclass, should call "update reward" and pass a lambda to compare and optionally pass a new reward value to set
-    * @param reward the reward value of the user's reward type
+    * @param simulationResult the data that we use to update this node
     */
-  def update(reward: R): Unit
+  def update(simulationResult: U, coefficients: C): Unit
 
   /**
     * adds a tree node to the children of this node
