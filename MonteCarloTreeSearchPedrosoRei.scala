@@ -8,7 +8,7 @@ import scala.collection.GenSeq
 import cse.fitzgero.mcts.core._
 import cse.fitzgero.mcts.tree._
 
-trait MonteCarloTreeSearchPedrosoRei[S,A] {
+trait MonteCarloTreeSearch[S,A] {
 
   ////////// domain and user-provided operations. to be implemented by the user //////////
 
@@ -105,7 +105,8 @@ trait MonteCarloTreeSearchPedrosoRei[S,A] {
 
   //////// utility operations. provided by the MCTS library ////////////
 
-  final protected def timeRemaining(startTime: Instant, computationTimeBudget: Long): Boolean = Instant.now.toEpochMilli - startTime.toEpochMilli < computationTimeBudget
+  protected def terminationCriterion: TerminationCriterion
+//  final protected def timeRemaining(startTime: Instant, computationTimeBudget: Long): Boolean = Instant.now.toEpochMilli - startTime.toEpochMilli < computationTimeBudget
   protected def actionSelection: ActionSelection[S,A]
   protected def random: RandomGenerator
 
@@ -129,9 +130,6 @@ trait MonteCarloTreeSearchPedrosoRei[S,A] {
     * the output of a simulation
     */
   type Update
-
-  var globalBestSimulation: Update
-  var globalWorstSimulation: Update
 
   /**
     * the ordering used to compare children during the treePolicy bestChild call, which uses maxBy to find a best child
@@ -189,7 +187,7 @@ trait MonteCarloTreeSearchPedrosoRei[S,A] {
     */
   final def run(root: Tree = startNode(startState)): Tree = {
     val startTime = Instant.now
-    while (timeRemaining(startTime, timeBudget)) {
+    while (terminationCriterion.terminationCheck[S,A,Tree](root)) {
       val v_t = treePolicy(root,getSearchCoefficients(root))(rewardOrdering)
       val ∆ = defaultPolicy(v_t)
       val c = updateSearchCoefficients(∆)

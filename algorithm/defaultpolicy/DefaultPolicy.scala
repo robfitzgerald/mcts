@@ -2,9 +2,9 @@ package cse.fitzgero.mcts.algorithm.defaultpolicy
 
 import scala.annotation.tailrec
 
-import cse.fitzgero.mcts.MonteCarloTreeSearchPedrosoRei
+import cse.fitzgero.mcts.MonteCarloTreeSearch
 
-trait DefaultPolicyPedrosoRei[S,A] extends MonteCarloTreeSearchPedrosoRei[S,A] {
+trait DefaultPolicy[S,A] extends MonteCarloTreeSearch[S,A] {
 
   override protected final def defaultPolicy(monteCarloTree: Tree): Update = {
     if (stateIsNonTerminal(monteCarloTree.state)) {

@@ -7,15 +7,8 @@ import cse.fitzgero.mcts.tree.MCTreeStandardReward
 trait UCTScalarStandardReward[S,A] extends MonteCarloTreeSearch[S,A] {
   self: {
     type Reward = Double
+    type Coefficients = UCTScalarStandardReward.Coefficients
   } =>
-
-  /**
-    * coefficient for the standard UCT algorithm
-    * @param Cp exploration parameter, typically in the range [0,1] for rewards in the same range
-    */
-  case class Coefficients (Cp: Double)
-  val ExplorationCoefficient = Coefficients(0.707D)
-  val SearchCoefficient = Coefficients(0D)
 
   /**
     * Upper Confidence Bound For Trees sampling method
@@ -37,7 +30,13 @@ trait UCTScalarStandardReward[S,A] extends MonteCarloTreeSearch[S,A] {
 
 
 //
-//object UCTScalarStandardReward {
-//  case class Coefficients(Cp: Double)
+object UCTScalarStandardReward {
+  /**
+    * coefficient for the standard UCT algorithm
+    * @param Cp exploration parameter, typically in the range [0,1] for rewards in the same range
+    */
+  case class Coefficients (Cp: Double)
+  val ExplorationCoefficient = Coefficients(0.707D)
+  val DecisionCoefficient = Coefficients(0D)
 //  def apply[S,A](): UCTScalarStandardReward[S,A] = new UCTScalarStandardReward[S,A]
-//}
+}

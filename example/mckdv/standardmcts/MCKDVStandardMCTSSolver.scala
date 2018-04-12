@@ -1,7 +1,7 @@
 package cse.fitzgero.mcts.example.mckdv.standardmcts
 
+import cse.fitzgero.mcts.algorithm.samplingpolicy.scalar.UCTScalarStandardReward
 import cse.fitzgero.mcts.example.mckdv.implementation.MCKDV._
-import cse.fitzgero.mcts.tree.MCTreeStandardReward
 /**
   * Mutliple Choice Knapsack Problems with Dependent Weights
   */
@@ -11,11 +11,14 @@ class MCKDVStandardMCTSSolver (val problem: Problem, val costBound: Int, val see
   // see costBound * 2 also in MCKDVGenerator
   val maxPossibleCost: BigDecimal = problem.multiset.size * problem.multiset.head.size * costBound * 2
 
-  override def evaluateTerminal(state: Selection): Double = (costOfSelection(state, problem.dependencies) / maxPossibleCost).toDouble
+  override def evaluateTerminal(state: Selection): Update = (costOfSelection(state, problem.dependencies) / maxPossibleCost).toDouble
 
-  override def getSearchCoefficients(tree: MCTreeStandardReward[Selection, Choice]): Coefficients = ExplorationCoefficient
+  override def getSearchCoefficients(tree: Tree): Coefficients = UCTScalarStandardReward.ExplorationCoefficient
 
-  override def getDecisionCoefficients(tree: MCTreeStandardReward[Selection, Choice]): Coefficients = SearchCoefficient
+  override def getDecisionCoefficients(tree: Tree): Coefficients = UCTScalarStandardReward.DecisionCoefficient
+
+  // there is no update in standard MCTS
+  override def updateSearchCoefficients(simulationResult: Double): Coefficients = UCTScalarStandardReward.ExplorationCoefficient
 }
 
 object MCKDVStandardMCTSSolver {

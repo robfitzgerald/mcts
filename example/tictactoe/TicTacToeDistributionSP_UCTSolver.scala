@@ -2,21 +2,22 @@ package cse.fitzgero.mcts.example.tictactoe
 
 import java.time.Instant
 
+import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.UCTDistributionSPMCTSReward
 import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.UCTDistributionSPMCTSReward._
 import cse.fitzgero.mcts.core._
-import cse.fitzgero.mcts.distribution.{DoublePrecisionDistribution, Observation}
+import cse.fitzgero.mcts.distribution.{DoublePrecisionDistribution, Observation, RunningDistribution}
 import cse.fitzgero.mcts.example.tictactoe.TicTacToe.Board._
 import cse.fitzgero.mcts.example.tictactoe.TicTacToe._
 import cse.fitzgero.mcts.variant._
 
 class TicTacToeDistributionSP_UCTSolver(
-                      seed: Long = 0L,
-                      duration: Long = 5000L) extends RewardDistributionSPMCTS[Board, Move] {
+                      val seed      : Long = 0L,
+                      val timeBudget: Long = 5000L) extends RewardDistributionSPMCTS[Board, Move] {
 
   override def applyAction(state: Board, action: Move): Board = state.applyMove(action)
 
   // we are creating the best move set for X
-  override def evaluateTerminal(state: Board): DoublePrecisionDistribution =
+  override def evaluateTerminal(state: Board): Update =
     Board.gameState(state) match {
       case Stalemate => Observation(0D)
       case XWins => Observation(1D) // if (state.currentPlayer == X) 1D else 0D
@@ -26,6 +27,7 @@ class TicTacToeDistributionSP_UCTSolver(
 
   def getSearchCoefficients(tree: Tree): Coefficients = Balanced
   def getDecisionCoefficients(tree: Tree): Coefficients = Coefficients(0D,0D)
+  override def updateSearchCoefficients(simulationResult: Observation): Coefficients = Balanced
 
   override def generatePossibleActions(state: Board): Seq[Move] = Board.possibleMoves(state)
 
@@ -40,7 +42,7 @@ class TicTacToeDistributionSP_UCTSolver(
   override def startState: Board = Board(X)
   override def random: RandomGenerator = new BuiltInRandomGenerator(Some(seed))
 //  override val samplingMethod =  UCTScalarStandardReward()
-  override val terminationCriterion = TimeTermination(Instant.now, duration)
+  override val terminationCriterion = TimeTermination(Instant.now, timeBudget)
   override val actionSelection = RandomSelection(random, generatePossibleActions)
 
 }

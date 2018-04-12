@@ -120,21 +120,21 @@ case class RunningDistribution (
   }
 }
 
-object DoublePrecisionDistribution {
+object RunningDistribution {
   //  variance scaled by 1000 so the coercion to Int does not strip all meaning from variance values
   // thus, our epsilon is 1/epsilonDenominator
   private val epsilonDenominator = 1000D
 
-  val distributionByMaxOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by{ d: DoublePrecisionDistribution => d.max match { case None => Int.MinValue; case Some(max) => (epsilonDenominator * max).toInt } }
-  val distributionByMinOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by{ d: DoublePrecisionDistribution => d.min match { case None => Int.MinValue; case Some(min) => (epsilonDenominator * min).toInt } }
-  val distributionByMeanOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by{ d: DoublePrecisionDistribution => d.mean match { case None => Int.MinValue; case Some(mean) => (epsilonDenominator * mean).toInt } }
+  val distributionByMaxOrdering: Ordering[RunningDistribution] = Ordering.by{ d: RunningDistribution => d.max match { case None => Int.MinValue; case Some(max) => (epsilonDenominator * max).toInt } }
+  val distributionByMinOrdering: Ordering[RunningDistribution] = Ordering.by{ d: RunningDistribution => d.min match { case None => Int.MinValue; case Some(min) => (epsilonDenominator * min).toInt } }
+  val distributionByMeanOrdering: Ordering[RunningDistribution] = Ordering.by{ d: RunningDistribution => d.mean match { case None => Int.MinValue; case Some(mean) => (epsilonDenominator * mean).toInt } }
 
   /**
     * use this ordering when higher means and tighter variance is desired
     * variance scaled by 1000 so the coercion to Int does not strip all meaning from variance values
     */
-  val distributionByMaximalMeanVarOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by {
-    d: DoublePrecisionDistribution =>
+  val distributionByMaximalMeanVarOrdering: Ordering[RunningDistribution] = Ordering.by {
+    d: RunningDistribution =>
       {
         for {
           mean <- d.mean
@@ -149,8 +149,8 @@ object DoublePrecisionDistribution {
   /**
     * use this ordering when lower means and tighter variance is desired
     */
-  val distributionByMinimalMeanVarOrdering: Ordering[DoublePrecisionDistribution] = Ordering.by {
-    d: DoublePrecisionDistribution =>
+  val distributionByMinimalMeanVarOrdering: Ordering[RunningDistribution] = Ordering.by {
+    d: RunningDistribution =>
       {
         for {
           mean <- d.mean

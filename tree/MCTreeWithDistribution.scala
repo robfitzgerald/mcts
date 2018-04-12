@@ -1,5 +1,7 @@
 package cse.fitzgero.mcts.tree
 
+import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.SP_UCT
+import cse.fitzgero.mcts.algorithm.samplingpolicy.distribution.UCTDistributionSPMCTSReward.Coefficients
 import cse.fitzgero.mcts.distribution._
 
 /**
@@ -13,16 +15,32 @@ import cse.fitzgero.mcts.distribution._
 class MCTreeWithDistribution[S, A] (
   override val action: Option[A],
   override val state: S
-)extends MonteCarloTree [S,A,DoublePrecisionDistribution,MCTreeWithDistribution[S, A]]{
-  var reward: DoublePrecisionDistribution = RunningDistribution()
-  override def update(reward: DoublePrecisionDistribution): Unit = reward match {
-    case obs: Observation =>
-      updateReward((r: DoublePrecisionDistribution) =>
-        r match {
-          case dist: RunningDistribution => Some(dist + obs)
-          case storedObs: Observation => Some(RunningDistribution() + storedObs + obs) // shouldn't happen
-        })
-    case _ => ()
+)extends MonteCarloTreeArbitraryUpdate [S,A,RunningDistribution,Observation,Coefficients,MCTreeWithDistribution[S, A]]{
+  var reward: RunningDistribution = RunningDistribution()
+
+  override def update(simulationResult: Observation, c: Coefficients): Unit = {
+    visits += 1
+    reward = reward + simulationResult
+    val parentVisits: Long = parent() match {
+    case None => 0L
+    case Some(p) => p.visits
+    }
+//    SP_UCT(
+//          reward,
+//          visits,
+//          parentVisits,
+//          c.Cp,
+//          c.D
+//        )
+    //    case obs: Observation =>
+
+//      reward = UCT(
+//        averageReward,
+//        visits,
+//        parentVisits,
+//        coefficients.Cp
+//      )
+//    case _ => ()
   }
 }
 

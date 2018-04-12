@@ -2,9 +2,9 @@ package cse.fitzgero.mcts.algorithm.backup
 
 import scala.annotation.tailrec
 
-import cse.fitzgero.mcts.MonteCarloTreeSearchPedrosoRei
+import cse.fitzgero.mcts.MonteCarloTreeSearch
 
-trait BackupPedrosoRei[S,A] extends MonteCarloTreeSearchPedrosoRei[S,A] {
+trait Backup[S,A] extends MonteCarloTreeSearch[S,A] {
   @tailrec
   override protected final def backup(node: Tree, coefficients: Coefficients, delta: Update): Tree = {
     node.parent() match {

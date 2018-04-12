@@ -5,7 +5,7 @@ import java.time.Instant
 import cse.fitzgero.mcts.tree._
 
 trait TerminationCriterion {
-  def terminationCheck[S,A,N <: MonteCarloTree[S,A,_,_]](monteCarloTree: N): Boolean
+  def terminationCheck[S,A,N <: MonteCarloTreeArbitraryUpdate[S,A,_,_,_,_]](monteCarloTree: N): Boolean
 }
 
 class TimeTermination (
@@ -13,7 +13,7 @@ class TimeTermination (
   val startTime: Instant,
   val computationTimeBudget: Long
 ) extends TerminationCriterion {
-  def terminationCheck[S,A,N <: MonteCarloTree[S,A,_,_]](monteCarloTree: N): Boolean =
+  def terminationCheck[S,A,N <: MonteCarloTreeArbitraryUpdate[S,A,_,_,_,_]](monteCarloTree: N): Boolean =
     Instant.now.toEpochMilli - startTime.toEpochMilli < computationTimeBudget
 }
 

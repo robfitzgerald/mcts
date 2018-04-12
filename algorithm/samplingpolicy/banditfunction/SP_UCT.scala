@@ -1,9 +1,9 @@
 package cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction
 
-import cse.fitzgero.mcts.distribution.{DoublePrecisionDistribution, Observation}
+import cse.fitzgero.mcts.distribution.{Observation, RunningDistribution}
 
 object SP_UCT {
-  def apply(reward: DoublePrecisionDistribution, childVisits: Long, parentVisits: Long, Cp: Double, D: Double): Observation = {
+  def apply(reward: RunningDistribution, childVisits: Long, parentVisits: Long, Cp: Double, D: Double): Observation = {
 
     if (parentVisits == 0L) {
       Observation(0D)

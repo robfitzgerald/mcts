@@ -1,23 +1,21 @@
 package cse.fitzgero.mcts.algorithm.samplingpolicy.scalar
 
+import cse.fitzgero.mcts.MonteCarloTreeSearch
 import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.UCT_PedrosoRei
-import cse.fitzgero.mcts.variant.PedrosoReiMCTS
 
-trait UCTScalarPedrosoReiReward[S,A] extends PedrosoReiMCTS[S,A] {
+
+trait UCTScalarPedrosoReiReward[S,A] extends MonteCarloTreeSearch[S,A] {
   self: {
     type Reward = Double
+    type Coefficients = UCTScalarPedrosoReiReward.Coefficients
   } =>
-
-  override type Coefficients = UCTScalarPedrosoReiReward.Coefficients
 
   /**
     * Upper Confidence Bound For Trees sampling method
     * @param node the node to evaluate
     * @return
     */
-  def evaluateBranch(node: Tree, c: Coefficients): Reward = {
-    node.reward
-  }
+  def evaluateBranch(node: Tree, c: Coefficients): Reward = node.reward
 }
 
 object UCTScalarPedrosoReiReward {
