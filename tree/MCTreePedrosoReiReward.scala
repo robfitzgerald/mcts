@@ -1,6 +1,7 @@
 package cse.fitzgero.mcts.tree
 
 import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.UCT_PedrosoRei
+import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.UCT_PedrosoRei.{Maximize, Objective}
 import cse.fitzgero.mcts.algorithm.samplingpolicy.scalar.UCTScalarPedrosoReiReward
 
 /**
@@ -13,7 +14,8 @@ import cse.fitzgero.mcts.algorithm.samplingpolicy.scalar.UCTScalarPedrosoReiRewa
   */
 class MCTreePedrosoReiReward[S, A] (
   override val action: Option[A],
-  override val state: S
+  override val state: S,
+  objective: Objective
 ) extends MonteCarloTreeArbitraryUpdate [S,A,Double,BigDecimal,UCTScalarPedrosoReiReward.Coefficients,MCTreePedrosoReiReward[S, A]] {
   var reward: Double = 0D
   var bestSimulation: BigDecimal = BigDecimal.decimal(0)
@@ -39,7 +41,8 @@ class MCTreePedrosoReiReward[S, A] (
       averageSimulation,
       visits,
       parentVisits,
-      coefficients.Cp
+      coefficients.Cp,
+      objective
     )
   }
 
@@ -57,8 +60,12 @@ object MCTreePedrosoReiReward {
   val maximize: (BigDecimal, BigDecimal) => BigDecimal = (a: BigDecimal, b: BigDecimal) => if (a > b) a else b
 
   def apply[S,A](state: S): MCTreePedrosoReiReward[S,A] =
-    new MCTreePedrosoReiReward[S,A](state = state, action = None)
+    new MCTreePedrosoReiReward[S,A](state = state, action = None, objective = Maximize)
 
   def apply[S,A](state: S, action: Option[A]): MCTreePedrosoReiReward[S,A] =
-    new MCTreePedrosoReiReward(state = state, action = action)
+    new MCTreePedrosoReiReward(state = state, action = action, objective = Maximize)
+
+  def apply[S,A](state: S, action: Option[A], objective: Objective): MCTreePedrosoReiReward[S,A] =
+    new MCTreePedrosoReiReward(state = state, action = action, objective = objective)
+
 }

@@ -15,8 +15,7 @@ trait RewardDistributionSPMCTS[S,A] extends MonteCarloTreeSearch[S,A]
                                   with StandardTreePolicy[S,A]
                                   with DefaultPolicy[S,A]
                                   with Backup[S,A]
-                                  with StandardExpand[S,A]
-                                  with UCTDistributionSPMCTSReward[S,A] {
+                                  with StandardExpand[S,A] {
 
   final override type Reward = RunningDistribution
   final override type Coefficients = UCTDistributionSPMCTSReward.Coefficients

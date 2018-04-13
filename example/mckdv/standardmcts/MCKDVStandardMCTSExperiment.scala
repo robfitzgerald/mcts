@@ -1,5 +1,6 @@
 package cse.fitzgero.mcts.example.mckdv.standardmcts
 
+import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.UCT_PedrosoRei.Objective
 import cse.fitzgero.mcts.example.mckdv.implementation.{MCKDV, MCKDVGenerator}
 
 class MCKDVStandardMCTSExperiment (val random: scala.util.Random, val costBound: Int) extends MCKDVGenerator {
@@ -11,6 +12,7 @@ class MCKDVStandardMCTSExperiment (val random: scala.util.Random, val costBound:
         val optCost = MCKDV.costOfSelection(optimal, problem.dependencies)
         val solver = MCKDVStandardMCTSSolver(problem, costBound * 2, 0, timeBudget)
         val tree = solver.run()
+//        println(s"Standard MCTS Tree search complete with ${tree.visits} iterations")
         val searchCost = MCKDV.costOfSelection(solver.bestGame(tree).toSet, problem.dependencies)
         (optCost,searchCost)
       }

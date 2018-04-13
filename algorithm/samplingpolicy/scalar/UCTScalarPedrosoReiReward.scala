@@ -15,7 +15,7 @@ trait UCTScalarPedrosoReiReward[S,A] extends MonteCarloTreeSearch[S,A] {
     * @param node the node to evaluate
     * @return
     */
-  def evaluateBranch(node: Tree, c: Coefficients): Reward = node.reward
+//  def evaluateBranch(node: Tree, c: Coefficients): Reward = node.reward
 }
 
 object UCTScalarPedrosoReiReward {

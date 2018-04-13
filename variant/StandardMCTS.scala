@@ -14,8 +14,7 @@ trait StandardMCTS[S,A] extends MonteCarloTreeSearch[S,A]
                         with StandardTreePolicy[S,A]
                         with DefaultPolicy[S,A]
                         with Backup[S,A]
-                        with StandardExpand[S,A]
-                        with UCTScalarStandardReward[S,A] {
+                        with StandardExpand[S,A] {
 
   final override type Reward = Double
   final override type Update = Double

@@ -4,29 +4,29 @@ import cse.fitzgero.mcts.MonteCarloTreeSearch
 import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.UCT
 import cse.fitzgero.mcts.tree.MCTreeStandardReward
 
-trait UCTScalarStandardReward[S,A] extends MonteCarloTreeSearch[S,A] {
-  self: {
-    type Reward = Double
-    type Coefficients = UCTScalarStandardReward.Coefficients
-  } =>
-
-  /**
-    * Upper Confidence Bound For Trees sampling method
-    * @param node the node to evaluate
-    * @return
-    */
-  def evaluateBranch(node: Tree, c: Coefficients): Reward = {
-    val parentVisits: Long = node.parent() match {
-      case None => 0L
-      case Some(parent) => parent.visits
-    }
-    UCT(
-      node.reward,
-      node.visits,
-      parentVisits,
-      c.Cp)
-  }
-}
+//trait UCTScalarStandardReward[S,A] extends MonteCarloTreeSearch[S,A] {
+//  self: {
+//    type Reward = Double
+//    type Coefficients = UCTScalarStandardReward.Coefficients
+//  } =>
+//
+//  /**
+//    * Upper Confidence Bound For Trees sampling method
+//    * @param node the node to evaluate
+//    * @return
+//    */
+//  def evaluateBranch(node: Tree, c: Coefficients): Reward = {
+//    val parentVisits: Long = node.parent() match {
+//      case None => 0L
+//      case Some(parent) => parent.visits
+//    }
+//    UCT(
+//      node.reward,
+//      node.visits,
+//      parentVisits,
+//      c.Cp)
+//  }
+//}
 
 
 //

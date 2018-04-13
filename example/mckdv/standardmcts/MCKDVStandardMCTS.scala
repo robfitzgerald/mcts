@@ -1,8 +1,7 @@
 package cse.fitzgero.mcts.example.mckdv.standardmcts
 
-import java.time.Instant
-
-import cse.fitzgero.mcts.core.{BuiltInRandomGenerator, RandomGenerator, RandomSelection, TimeTermination}
+import cse.fitzgero.mcts.core.terminationcriterion.{IterationTermination, TerminationCriterion02}
+import cse.fitzgero.mcts.core.{BuiltInRandomGenerator, RandomGenerator, RandomSelection}
 import cse.fitzgero.mcts.example.mckdv.implementation.MCKDV._
 import cse.fitzgero.mcts.variant.StandardMCTS
 
@@ -27,6 +26,7 @@ trait MCKDVStandardMCTS extends StandardMCTS[Selection, Choice] {
   final override def stateIsNonTerminal(state: Selection): Boolean = state.size != problem.multiset.size
   final override def startState: Selection = Set()
   final override def random: RandomGenerator = new BuiltInRandomGenerator(Some(seed))
-  final override val terminationCriterion = TimeTermination(Instant.now, timeBudget)
+//  final override val terminationCriterion: TimeTermination02[Selection,Choice,Tree] = TimeTermination02[Selection,Choice,Tree](timeBudget)
+  final override val terminationCriterion: TerminationCriterion02[Selection, Choice, Tree] = IterationTermination[Selection,Choice,Tree](timeBudget)
   final override val actionSelection = RandomSelection(random, generatePossibleActions)
 }

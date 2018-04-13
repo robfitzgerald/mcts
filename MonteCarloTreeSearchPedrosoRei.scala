@@ -6,6 +6,7 @@ import scala.annotation.tailrec
 import scala.collection.GenSeq
 
 import cse.fitzgero.mcts.core._
+import cse.fitzgero.mcts.core.terminationcriterion.TerminationCriterion02
 import cse.fitzgero.mcts.tree._
 
 trait MonteCarloTreeSearch[S,A] {
@@ -63,9 +64,6 @@ trait MonteCarloTreeSearch[S,A] {
     */
   def evaluateTerminal(state: S): Update
 
-
-  def evaluateBranch(tree: Tree, coefficients: Coefficients): Reward
-
   /**
     * recognizes non-terminal game states
     * @param state the given state
@@ -105,7 +103,7 @@ trait MonteCarloTreeSearch[S,A] {
 
   //////// utility operations. provided by the MCTS library ////////////
 
-  protected def terminationCriterion: TerminationCriterion
+  protected val terminationCriterion: TerminationCriterion02[S,A,Tree]
 //  final protected def timeRemaining(startTime: Instant, computationTimeBudget: Long): Boolean = Instant.now.toEpochMilli - startTime.toEpochMilli < computationTimeBudget
   protected def actionSelection: ActionSelection[S,A]
   protected def random: RandomGenerator
@@ -180,19 +178,22 @@ trait MonteCarloTreeSearch[S,A] {
 
   //////// implemented members //////////
 
+  def evaluateBranch(tree: Tree, coefficients: Coefficients): Reward = tree.reward
 
   /**
     * run this Monte Carlo Tree Search
     * @return the tree at the end of the search
     */
   final def run(root: Tree = startNode(startState)): Tree = {
-    val startTime = Instant.now
-    while (terminationCriterion.terminationCheck[S,A,Tree](root)) {
+    terminationCriterion.init()
+//    println(terminationCriterion)
+    while (terminationCriterion.withinComputationalBudget(root)) {
       val v_t = treePolicy(root,getSearchCoefficients(root))(rewardOrdering)
       val ∆ = defaultPolicy(v_t)
       val c = updateSearchCoefficients(∆)
       backup(v_t,c,∆)
     }
+//    println(s"finishing run() at ${Instant.now.toEpochMilli}")
     root
   }
 

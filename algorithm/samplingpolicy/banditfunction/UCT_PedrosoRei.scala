@@ -5,6 +5,17 @@ package cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction
   * from J.P. Pedroso and R. Rei, "Tree Search and Simulation", Applied Simulation and Optimization, Springer International Publishing, pp 119-131, 2015.
   */
 object UCT_PedrosoRei {
+
+  sealed trait Objective {
+    def apply(a: Double): Double
+  }
+  case object Minimize extends Objective {
+    def apply(a: Double): Double = -a
+  }
+  case object Maximize extends Objective {
+    def apply(a: Double): Double = a
+  }
+
   /**
     * evaluates UCT with modifications for combinatorial search, shown as equation 1 on page 113
     * @param globalBestSimulation the real objective function evaluation of the best simulation in the whole tree
@@ -22,12 +33,13 @@ object UCT_PedrosoRei {
             childAverageSimulation: BigDecimal,
             childVisits: Long,
             parentVisits: Long,
-            Cp: Double): Double = {
+            Cp: Double,
+            objective: Objective): Double = {
 
     val X = pedrosoReiExploitationTerm(globalBestSimulation, globalWorstSimulation, childBestSimulation)
     val E = pedrosoReiExplorationTerm(globalBestSimulation, globalWorstSimulation, childAverageSimulation, Cp, parentVisits, childVisits)
 
-    X + E
+    objective(X + E)
   }
 
 
@@ -39,7 +51,12 @@ object UCT_PedrosoRei {
     * @return
     */
   def pedrosoReiExploitationTerm(globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal, childBestSimulation: BigDecimal): Double = {
-    val a: Double = ((globalWorstSimulation - childBestSimulation) / (globalWorstSimulation - globalBestSimulation)).toDouble
+    val a: Double =
+      if (globalWorstSimulation == globalBestSimulation)
+        Double.PositiveInfinity
+      else
+        ((globalWorstSimulation - childBestSimulation) / (globalWorstSimulation - globalBestSimulation)).toDouble
+
     val numer: Double = math.pow(math.E, a) - 1D
     val denom: Double = math.E - 1D
     if (denom != 0) numer / denom else 0D
@@ -53,7 +70,11 @@ object UCT_PedrosoRei {
     * @return
     */
   def pedrosoReiExplorationTerm(globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal, childAverageSimulation: BigDecimal, Cp: Double, parentVisits: Long, childVisits: Long): Double = {
-    val a: Double = ((globalWorstSimulation - childAverageSimulation) / (globalWorstSimulation - globalBestSimulation)).toDouble
+    val a: Double =
+      if (globalWorstSimulation == globalBestSimulation)
+        Double.PositiveInfinity
+      else
+        ((globalWorstSimulation - childAverageSimulation) / (globalWorstSimulation - globalBestSimulation)).toDouble
     val numer: Double = math.pow(math.E, a) - 1D
     val denom: Double = math.E - 1D
     val XBar = if (denom != 0) numer / denom else 0D
