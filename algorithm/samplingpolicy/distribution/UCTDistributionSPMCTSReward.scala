@@ -11,25 +11,25 @@ trait UCTDistributionSPMCTSReward[S,A] extends MonteCarloTreeSearch[S,A] {
   } =>
 
 
-  /**
-    * Upper Confidence Bound For Trees sampling method
-    * @param node the node to evaluate
-    * @return
-    */
-  final override def evaluateBranch(node: Tree, coefficients: Coefficients): Reward = {
-    node.reward
-//    val parentVisits: Long = node.parent() match {
-//      case None => 0L
-//      case Some(parent) => parent.visits
-//    }
-//    SP_UCT(
-//      node.reward,
-//      node.visits,
-//      parentVisits,
-//      coefficients.Cp,
-//      coefficients.D
-//    )
-  }
+//  /**
+//    * Upper Confidence Bound For Trees sampling method
+//    * @param node the node to evaluate
+//    * @return
+//    */
+//  final override def evaluateBranch(node: Tree, coefficients: Coefficients): Reward = {
+//    node.reward
+////    val parentVisits: Long = node.parent() match {
+////      case None => 0L
+////      case Some(parent) => parent.visits
+////    }
+////    SP_UCT(
+////      node.reward,
+////      node.visits,
+////      parentVisits,
+////      coefficients.Cp,
+////      coefficients.D
+////    )
+//  }
 }
 
 object UCTDistributionSPMCTSReward {

@@ -15,17 +15,12 @@ class MCTreeStandardReward[S, A] (
   override val action: Option[A],
   override val state: S
 )extends MonteCarloTreeArbitraryUpdate [S,A,Double,Double,UCTScalarStandardReward.Coefficients,MCTreeStandardReward[S, A]] {
+
   var reward: Double = 0D
+
   protected var rewardSum: Double = 0D
-//  override def update(reward: Double): Unit = updateReward((r: Double) => Some(r + reward))
-  /**
-    * updates the node information related to UCT for combinatorial search
-    * @param simulationResult the data that we use to update this node
-    * @param coefficients global best/worst simulations (must be set in tree search) and the Cp value
-    */
-  override def update(simulationResult: Double, coefficients: UCTScalarStandardReward.Coefficients): Unit = {
-    visits += 1
-    rewardSum += simulationResult
+
+  override def reward(coefficients: UCTScalarStandardReward.Coefficients): Double = {
     val parentVisits: Long = parent() match {
       case None => 0L
       case Some(p) => p.visits
@@ -36,8 +31,21 @@ class MCTreeStandardReward[S, A] (
       parentVisits,
       coefficients.Cp
     )
+    reward
+  }
+
+  /**
+    * updates the node information related to UCT for combinatorial search
+    * @param simulationResult the data that we use to update this node
+    * @param coefficients global best/worst simulations (must be set in tree search) and the Cp value
+    */
+  override def update(simulationResult: Double, coefficients: UCTScalarStandardReward.Coefficients): Unit = {
+    visits += 1
+    rewardSum += simulationResult
   }
   def averageReward: Double = if (visits == 0) 0D else rewardSum / visits
+
+  override def treeSpecificPrintData: String = f"$reward%.2f reward from $visits visits"
 }
 
 object MCTreeStandardReward {

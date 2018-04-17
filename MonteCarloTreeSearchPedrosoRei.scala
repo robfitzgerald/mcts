@@ -178,7 +178,7 @@ trait MonteCarloTreeSearch[S,A] {
 
   //////// implemented members //////////
 
-  def evaluateBranch(tree: Tree, coefficients: Coefficients): Reward = tree.reward
+  def evaluateBranch(tree: Tree, coefficients: Coefficients): Reward = tree.reward(coefficients)
 
   /**
     * run this Monte Carlo Tree Search
@@ -186,14 +186,12 @@ trait MonteCarloTreeSearch[S,A] {
     */
   final def run(root: Tree = startNode(startState)): Tree = {
     terminationCriterion.init()
-//    println(terminationCriterion)
     while (terminationCriterion.withinComputationalBudget(root)) {
       val v_t = treePolicy(root,getSearchCoefficients(root))(rewardOrdering)
       val ∆ = defaultPolicy(v_t)
       val c = updateSearchCoefficients(∆)
       backup(v_t,c,∆)
     }
-//    println(s"finishing run() at ${Instant.now.toEpochMilli}")
     root
   }
 

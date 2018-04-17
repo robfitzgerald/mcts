@@ -1,6 +1,6 @@
 package cse.fitzgero.mcts.example.mckdv.pedrosorei
 
-import cse.fitzgero.mcts.core.terminationcriterion.{IterationTermination, TerminationCriterion02}
+import cse.fitzgero.mcts.core.terminationcriterion.{IterationTermination, TerminationCriterion02, TimeTermination02}
 import cse.fitzgero.mcts.core.{BuiltInRandomGenerator, RandomGenerator, RandomSelection}
 import cse.fitzgero.mcts.example.mckdv.implementation.MCKDV._
 import cse.fitzgero.mcts.variant.PedrosoReiMCTS
@@ -33,7 +33,6 @@ trait MCKDVPedrosoReiMCTS extends PedrosoReiMCTS[Selection, Choice] {
 
   final override def random: RandomGenerator = new BuiltInRandomGenerator(Some(seed))
 
-  //  final override val terminationCriterion: TimeTermination02[Selection,Choice,Tree] = TimeTermination02[Selection,Choice,Tree](timeBudget)
-  final override val terminationCriterion: TerminationCriterion02[Selection, Choice, Tree] = IterationTermination[Selection,Choice,Tree](timeBudget)
+  final override val terminationCriterion: TerminationCriterion02[Selection, Choice, Tree] = TimeTermination02[Selection,Choice,Tree](timeBudget)
   final override val actionSelection = RandomSelection(random, generatePossibleActions)
 }

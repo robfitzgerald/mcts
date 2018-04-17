@@ -18,7 +18,13 @@ trait MonteCarloTreeArbitraryUpdate[S,A,R,U,C,N <: MonteCarloTreeArbitraryUpdate
   def state: S
   def action: Option[A]
   // this changes through regular tree operations
-  var reward: R
+//  var reward: R
+  /**
+    * calculates the reward value for this node
+    * @param coefficients the coefficients used for this calculation
+    * @return a reward value
+    */
+  def reward(coefficients: C): R
 
   ////// internal state
   // these change through regular tree operations
@@ -89,15 +95,16 @@ trait MonteCarloTreeArbitraryUpdate[S,A,R,U,C,N <: MonteCarloTreeArbitraryUpdate
   def hasChildren: Boolean = children.nonEmpty
   def hasNoChildren: Boolean = children.isEmpty
 
+  def treeSpecificPrintData: String
+
   override def toString: String = {
-    val leadIn = if (depth == 0) "" else s"$depth${ " " * (depth-1) }"
+    val leadIn = if (depth == 0) "" else s"$depth${ " " * depth }"
     val nodeType = if (depth == 0) "root" else if (children.isEmpty) "leaf" else "brch"
     val actionUsed = action match {
       case None => ""
-      case Some(a) => s"$a"
+      case Some(a) => s"   $a"
     }
-    val rewardValue = s"${reward.toString}"
-    s"$leadIn$nodeType - $actionUsed - $rewardValue\n"
+    s"$leadIn$nodeType$actionUsed   $treeSpecificPrintData\n"
   }
 
   def defaultTransform(nodes: List[(A, () => N)]): List[N] = nodes.map { _._2() }

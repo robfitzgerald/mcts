@@ -23,6 +23,8 @@ trait PedrosoReiMCTS[S,A] extends MonteCarloTreeSearch[S,A]
   final override type Update = BigDecimal
   final override type Coefficients = UCTScalarPedrosoReiReward.Coefficients
 
+  // these are updated by updateSearchCoefficients in the implementing class
+  // best and worst depend on maximizing vs. minimizing objective
   final var globalBestSimulation: Update = BigDecimal.decimal(0)
   final var globalWorstSimulation: Update = BigDecimal.decimal(0)
 
@@ -30,7 +32,7 @@ trait PedrosoReiMCTS[S,A] extends MonteCarloTreeSearch[S,A]
 
   final override type Tree = MCTreePedrosoReiReward[S,A]
 
-  final override def startNode(s: S): MCTreePedrosoReiReward[S, A] = MCTreePedrosoReiReward(s)
+  final override def startNode(s: S): MCTreePedrosoReiReward[S, A] = MCTreePedrosoReiReward(s, None, objective = objective)
 
   final override def createNewNode(state: S, action: Option[A]): MCTreePedrosoReiReward[S, A] =
     MCTreePedrosoReiReward(state, action, objective)

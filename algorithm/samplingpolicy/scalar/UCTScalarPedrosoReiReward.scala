@@ -10,12 +10,6 @@ trait UCTScalarPedrosoReiReward[S,A] extends MonteCarloTreeSearch[S,A] {
     type Coefficients = UCTScalarPedrosoReiReward.Coefficients
   } =>
 
-  /**
-    * Upper Confidence Bound For Trees sampling method
-    * @param node the node to evaluate
-    * @return
-    */
-//  def evaluateBranch(node: Tree, c: Coefficients): Reward = node.reward
 }
 
 object UCTScalarPedrosoReiReward {
@@ -28,6 +22,6 @@ object UCTScalarPedrosoReiReward {
     */
   case class Coefficients (Cp: Double, globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal)
 
-  val ExplorationCoefficient = 0.707D
-  val SearchCoefficient = 0D
+  val ExplorationCoefficient: Double = 1D/0.707D
+  val SearchCoefficient: Double = 0D
 }

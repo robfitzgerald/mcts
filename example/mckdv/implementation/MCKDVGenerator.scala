@@ -22,6 +22,7 @@ trait MCKDVGenerator {
   }
 
   def createOptimalCombination(problem: Problem, objective: Objective = Maximize): (Problem, Set[Choice]) = {
+    // select one Choice from each set in the multiset
     val chosenOptimalCombination: Set[Choice] =
       problem
         .multiset
@@ -29,20 +30,25 @@ trait MCKDVGenerator {
           set =>
             set.toVector(random.nextInt(set.size))
         }
+    // for each choice in the minimal set,
+    //   get their depenencies
+    //
     val updatedDependencies = chosenOptimalCombination.foldLeft(problem.dependencies)(
-      (acc, choice) => {
-        val thisChoiceDeps = acc(choice)
-        val updatedDeps = thisChoiceDeps.map {
+      (dependencies, choice) => {
+        val thisChoiceDependencies: List[Dependency] = dependencies(choice)
+        val updatedDeps = thisChoiceDependencies.map {
           dep =>
             if (chosenOptimalCombination(dep.dst)) objective match {
               case Maximize =>
+                // sets the weight for this dependency to some sentinel value outside of the costBound
                 Dependency(2 * costBound, dep.dst)
               case Minimize =>
+                // sets the weight for this depencency to zero
                 Dependency(0, dep.dst)
             }
             else dep
         }
-        acc.updated(choice, updatedDeps)
+        dependencies.updated(choice, updatedDeps)
       }
     )
     ((problem.multiset, updatedDependencies), chosenOptimalCombination)
@@ -94,10 +100,12 @@ trait MCKDVGenerator {
       otherChoice =>
         objective match {
           case Maximize =>
+            // sets the weight for this dependency as a random value in the range [0, costBound). the true optimal dependency value will be a sentinel value at 2 * costBound.
             val costBetweenZeroAndCostBound: Int = random.nextInt(costBound)
             Dependency(costBetweenZeroAndCostBound, otherChoice)
           case Minimize =>
-            val costAboveCostBound: Int = random.nextInt(costBound) + (2 * costBound)
+            // sets the weight for this dependency as a random value in the range [costBound, costBound * 2). the true optimal dependency value will be zero.
+            val costAboveCostBound: Int = random.nextInt(costBound) + costBound
             Dependency(costAboveCostBound, otherChoice)
         }
     }.toList

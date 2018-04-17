@@ -18,30 +18,27 @@ class MCTreeWithDistribution[S, A] (
 )extends MonteCarloTreeArbitraryUpdate [S,A,RunningDistribution,Observation,Coefficients,MCTreeWithDistribution[S, A]]{
   var reward: RunningDistribution = RunningDistribution()
 
+  override def reward(coefficients: Coefficients): RunningDistribution = {
+    val parentVisits: Long = parent() match {
+      case None => 0L
+      case Some(p) => p.visits
+    }
+    reward += SP_UCT(
+      reward,
+      visits,
+      parentVisits,
+      coefficients.Cp,
+      coefficients.D
+    )
+    reward
+  }
+
   override def update(simulationResult: Observation, c: Coefficients): Unit = {
     visits += 1
     reward = reward + simulationResult
-    val parentVisits: Long = parent() match {
-    case None => 0L
-    case Some(p) => p.visits
-    }
-//    SP_UCT(
-//          reward,
-//          visits,
-//          parentVisits,
-//          c.Cp,
-//          c.D
-//        )
-    //    case obs: Observation =>
-
-//      reward = UCT(
-//        averageReward,
-//        visits,
-//        parentVisits,
-//        coefficients.Cp
-//      )
-//    case _ => ()
   }
+
+  override def treeSpecificPrintData: String = f"$reward"
 }
 
 object MCTreeWithDistribution {

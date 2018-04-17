@@ -20,12 +20,12 @@ trait UCTDistributionStandardReward[S,A] extends MonteCarloTreeSearch[S,A] {
     * @param node the node to evaluate
     * @return
     */
-  def evaluateBranch(node: Tree, c: Coefficients): Reward = {
+  override def evaluateBranch(node: Tree, c: Coefficients): Reward = {
     val parentVisits: Long = node.parent() match {
       case None => 0L
       case Some(parent) => parent.visits
     }
-    val reward: Double = node.reward.mean match {
+    val reward: Double = node.reward(c).mean match {
       case None => 0D
       case Some(mean) =>
         // UCT will divide by count, but this is already a mean, so we will artificially inflate this reward value to offset that calculation

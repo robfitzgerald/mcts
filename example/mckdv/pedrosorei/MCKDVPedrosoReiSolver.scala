@@ -10,8 +10,8 @@ import cse.fitzgero.mcts.example.mckdv.implementation.MCKDV._
 class MCKDVPedrosoReiSolver(val problem: Problem, val seed: Long = 0L, val timeBudget: Long = 5000L, val objective: Objective = Maximize) extends MCKDVPedrosoReiMCTS {
 
   override def updateSearchCoefficients(simulationResult: Update): Coefficients = {
-    if (simulationResult < globalWorstSimulation) globalWorstSimulation = simulationResult
-    else if (simulationResult > globalBestSimulation) globalBestSimulation = simulationResult
+    if (objective.isBetterThan(globalWorstSimulation, simulationResult)) globalWorstSimulation = simulationResult
+    else if (objective.isBetterThan(simulationResult, globalBestSimulation)) globalBestSimulation = simulationResult
     Coefficients(ExplorationCoefficient, globalBestSimulation, globalWorstSimulation)
   }
 
