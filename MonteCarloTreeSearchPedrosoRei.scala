@@ -18,7 +18,7 @@ trait MonteCarloTreeSearch[S,A] {
     * @param simulationResult the value taken from running the default policy
     * @return a coefficients object with the updated values in it (for best, worst simulation)
     */
-  def updateSearchCoefficients(simulationResult: Update): Coefficients
+  def updateMetaData(simulationResult: Update, node: Tree): Coefficients
 
   /**
     * called on each TreePolicy. offers the chance to evaluate the tree before returning the search function coefficients.
@@ -189,7 +189,7 @@ trait MonteCarloTreeSearch[S,A] {
     while (terminationCriterion.withinComputationalBudget(root)) {
       val v_t = treePolicy(root,getSearchCoefficients(root))(rewardOrdering)
       val ∆ = defaultPolicy(v_t)
-      val c = updateSearchCoefficients(∆)
+      val c = updateMetaData(∆, v_t)
       backup(v_t,c,∆)
     }
     root

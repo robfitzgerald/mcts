@@ -6,17 +6,26 @@ package cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction
   */
 object UCT_PedrosoRei {
 
+  final val LowerBounds: BigDecimal = BigDecimal.decimal(0)
+  final val UpperBounds: BigDecimal = BigDecimal("9" * 50)
+
   sealed trait Objective {
-    def default: Double
-    def isBetterThan(a: BigDecimal, b: BigDecimal): Boolean
+    def defaultBest: BigDecimal
+    def defaultWorst: BigDecimal
+    def isBetterThanOrEqualTo(a: BigDecimal, b: BigDecimal): Boolean
+    def isWorseThan(a: BigDecimal, b: BigDecimal): Boolean
   }
   case object Minimize extends Objective {
-    override def default: Double = Double.PositiveInfinity
-    override def isBetterThan(a: BigDecimal, b: BigDecimal): Boolean = a < b
+    override def defaultBest: BigDecimal = UpperBounds
+    override def defaultWorst: BigDecimal = LowerBounds
+    override def isBetterThanOrEqualTo(a: BigDecimal, b: BigDecimal): Boolean = a <= b
+    def isWorseThan(a: BigDecimal, b: BigDecimal): Boolean = a > b
   }
   case object Maximize extends Objective {
-    override def default: Double = 0D
-    override def isBetterThan(a: BigDecimal, b: BigDecimal): Boolean = a > b
+    override def defaultBest: BigDecimal = LowerBounds
+    override def defaultWorst: BigDecimal = UpperBounds
+    override def isBetterThanOrEqualTo(a: BigDecimal, b: BigDecimal): Boolean = a >= b
+    def isWorseThan(a: BigDecimal, b: BigDecimal): Boolean = a < b
   }
 
   /**
@@ -36,13 +45,13 @@ object UCT_PedrosoRei {
             childAverageSimulation: BigDecimal,
             childVisits: Long,
             parentVisits: Long,
-            Cp: Double,
-            objective: Objective): Double = {
-
-    val X = pedrosoReiExploitationTerm(globalBestSimulation, globalWorstSimulation, childBestSimulation, objective)
-    val E = pedrosoReiExplorationTerm(globalBestSimulation, globalWorstSimulation, childAverageSimulation, Cp, parentVisits, childVisits, objective)
-
-    X + E
+            Cp: Double): Double = {
+    if (childVisits == 0L) Double.PositiveInfinity
+    else {
+      val X = pedrosoReiExploitationTerm(globalBestSimulation, globalWorstSimulation, childBestSimulation)
+      val E = pedrosoReiExplorationTerm(globalBestSimulation, globalWorstSimulation, childAverageSimulation, Cp, parentVisits, childVisits)
+      X + E
+    }
   }
 
 
@@ -53,13 +62,15 @@ object UCT_PedrosoRei {
     * @param childBestSimulation
     * @return
     */
-  def pedrosoReiExploitationTerm(globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal, childBestSimulation: BigDecimal, objective: Objective): Double = {
-    val a: Double =
-      if (globalWorstSimulation == globalBestSimulation)
-        0D
-      else
-        ((globalWorstSimulation - childBestSimulation) / (globalWorstSimulation - globalBestSimulation)).toDouble
+  def pedrosoReiExploitationTerm(globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal, childBestSimulation: BigDecimal): Double = {
+    if (globalWorstSimulation == globalBestSimulation) Double.PositiveInfinity
+    else {
+      pedrosoReiXTerm(globalBestSimulation,globalWorstSimulation,childBestSimulation)
+    }
+  }
 
+  def pedrosoReiXTerm(globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal, localSimulation: BigDecimal): Double = {
+    val a: Double = ((globalWorstSimulation - localSimulation) / (globalWorstSimulation - globalBestSimulation)).toDouble
     val numer: Double = math.pow(math.E, a) - 1D
     val denom: Double = math.E - 1D
     if (denom != 0) numer / denom else 0D
@@ -72,25 +83,21 @@ object UCT_PedrosoRei {
     * @param childAverageSimulation
     * @return
     */
-  def pedrosoReiExplorationTerm(globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal, childAverageSimulation: BigDecimal, Cp: Double, parentVisits: Long, childVisits: Long, objective: Objective): Double = {
-    val b: Double =
-      if (globalWorstSimulation == globalBestSimulation)
-        0D
-      else
-        ((globalWorstSimulation - childAverageSimulation) / (globalWorstSimulation - globalBestSimulation)).toDouble
-    val numer: Double = math.pow(math.E, b) - 1D
-    val denom: Double = math.E - 1D
-    val XBar = if (denom != 0) numer / denom else 0D
-    val E = uctExploration(Cp, parentVisits, childVisits)
-    XBar * E
+  def pedrosoReiExplorationTerm(globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal, childAverageSimulation: BigDecimal, Cp: Double, parentVisits: Long, childVisits: Long): Double = {
+    if (globalWorstSimulation == globalBestSimulation) Double.PositiveInfinity
+    else {
+      val XBar = pedrosoReiXTerm(globalBestSimulation, globalWorstSimulation, childAverageSimulation)
+      val E = uctExploration(Cp, parentVisits, childVisits)
+      XBar * E
+    }
   }
 
   def uctExploration(Cp: Double, parentVisits: Long, childVisits: Long): Double = {
     if (Cp == 0)
       0D
     else if (childVisits == 0)
-      Double.MaxValue
+      Double.PositiveInfinity
     else
-      2 * Cp * math.sqrt((2.0D * math.log(parentVisits)) / childVisits)
+      Cp * math.sqrt(math.log(parentVisits) / childVisits)
   }
 }

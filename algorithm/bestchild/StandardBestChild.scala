@@ -7,7 +7,7 @@ trait StandardBestChild[S,A] extends MonteCarloTreeSearch[S,A] {
     if (node.hasNoChildren) { None }
     else {
       val children = node.childrenNodes.values map {
-        tree: Tree => (evaluateBranch(tree, coefficients), tree)
+        tree: Tree => (tree.reward(coefficients), tree)
       }
       val bestChild = children.maxBy{_._1}._2
       Some(bestChild)

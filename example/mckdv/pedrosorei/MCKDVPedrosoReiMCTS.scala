@@ -1,6 +1,7 @@
 package cse.fitzgero.mcts.example.mckdv.pedrosorei
 
-import cse.fitzgero.mcts.core.terminationcriterion.{IterationTermination, TerminationCriterion02, TimeTermination02}
+import cse.fitzgero.mcts.algorithm.samplingpolicy.scalar.UCTScalarPedrosoReiReward.{Coefficients, ExplorationCoefficient}
+import cse.fitzgero.mcts.core.terminationcriterion.{TerminationCriterion02, TimeTermination02}
 import cse.fitzgero.mcts.core.{BuiltInRandomGenerator, RandomGenerator, RandomSelection}
 import cse.fitzgero.mcts.example.mckdv.implementation.MCKDV._
 import cse.fitzgero.mcts.variant.PedrosoReiMCTS
@@ -13,6 +14,15 @@ trait MCKDVPedrosoReiMCTS extends PedrosoReiMCTS[Selection, Choice] {
   def timeBudget: Long
 
   // user must implement evaluateTerminal, getSearchCoefficients, and getDecisionCoefficients
+
+  final override def updateMetaData(simulationResult: Update, node: Tree): Coefficients = {
+    if (objective.isWorseThan(simulationResult, globalWorstSimulation)) globalWorstSimulation = simulationResult
+    if (objective.isBetterThanOrEqualTo(simulationResult, globalBestSimulation)) {
+      globalBestSimulation = simulationResult
+      if (!stateIsNonTerminal(node.state)) bestSolution = node.state
+    }
+    Coefficients(ExplorationCoefficient, globalBestSimulation, globalWorstSimulation)
+  }
 
   final override def applyAction(state: Selection, action: Choice): Selection = state + action
 

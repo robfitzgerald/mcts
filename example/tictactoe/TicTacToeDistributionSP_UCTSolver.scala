@@ -28,7 +28,7 @@ class TicTacToeDistributionSP_UCTSolver(
 
   def getSearchCoefficients(tree: Tree): Coefficients = Balanced
   def getDecisionCoefficients(tree: Tree): Coefficients = Coefficients(0D,0D)
-  override def updateSearchCoefficients(simulationResult: Observation): Coefficients = Balanced
+  override def updateMetaData(simulationResult: Observation, node: Tree): Coefficients = Balanced
 
   override def generatePossibleActions(state: Board): Seq[Move] = Board.possibleMoves(state)
 

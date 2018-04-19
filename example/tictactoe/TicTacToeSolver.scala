@@ -26,7 +26,7 @@ class TicTacToeSolver(val seed      : Long = 0L,
 
   override def getDecisionCoefficients(tree: Tree): Coefficients = UCTScalarStandardReward.DecisionCoefficient
   override def getSearchCoefficients(tree: Tree): Coefficients = UCTScalarStandardReward.ExplorationCoefficient
-  override def updateSearchCoefficients(simulationResult: Update): Coefficients = UCTScalarStandardReward.ExplorationCoefficient
+  override def updateMetaData(simulationResult: Update, node: Tree): Coefficients = UCTScalarStandardReward.ExplorationCoefficient
 
   override def generatePossibleActions(state: Board): Seq[Move] = Board.possibleMoves(state)
 

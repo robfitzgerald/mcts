@@ -21,7 +21,7 @@ class MCTreePedrosoReiReward[S, A] (
   /**
     * stores the most recently calculated reward value for this node
     */
-  private var reward: Double = 0D
+  private var storedReward: Double = 0D
 
   /**
     * calculate the reward value for this node
@@ -33,17 +33,16 @@ class MCTreePedrosoReiReward[S, A] (
       case None => 0L
       case Some(p) => p.visits
     }
-    reward = UCT_PedrosoRei(
+    storedReward = UCT_PedrosoRei(
       coefficients.globalBestSimulation,
       coefficients.globalWorstSimulation,
       bestSimulation,
       averageSimulation,
       visits,
       parentVisits,
-      coefficients.Cp,
-      objective
+      coefficients.Cp
     )
-    reward
+    storedReward
   }
 
   /**
@@ -64,17 +63,7 @@ class MCTreePedrosoReiReward[S, A] (
   override def update(simulationResult: BigDecimal, coefficients: UCTScalarPedrosoReiReward.Coefficients): Unit = {
     visits += 1
     averageSum += simulationResult
-    if (objective.isBetterThan(simulationResult, bestSimulation)) bestSimulation = simulationResult
-
-//    reward = UCT_PedrosoRei(
-//      coefficients.globalBestSimulation,
-//      coefficients.globalWorstSimulation,
-//      bestSimulation,
-//      averageSimulation,
-//      visits,
-//      parentVisits,
-//      coefficients.Cp
-//    )
+    if (objective.isBetterThanOrEqualTo(simulationResult, bestSimulation)) bestSimulation = simulationResult
   }
 
   /**
@@ -83,7 +72,7 @@ class MCTreePedrosoReiReward[S, A] (
     */
   def averageSimulation: BigDecimal = if (visits == 0) BigDecimal.decimal(0) else averageSum / visits
 
-  override def treeSpecificPrintData: String = f"$reward%.2f reward from $visits visits"
+  override def treeSpecificPrintData: String = f"$storedReward%.2f reward from $visits visits"
 }
 
 

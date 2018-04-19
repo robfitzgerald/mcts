@@ -15,13 +15,13 @@ trait MCKDVGenerator {
   def random: scala.util.Random
   def costBound: Int
 
-  def genProblem(n: Int, k: Int, objective: Objective = Maximize): (Problem, Set[Choice]) = {
+  def genProblem(n: Int, k: Int, objective: Objective): (Problem, Set[Choice]) = {
     val mset = genMultiset(n,k)
     val deps = genDependencies(mset, objective)
     createOptimalCombination((mset,deps), objective)
   }
 
-  def createOptimalCombination(problem: Problem, objective: Objective = Maximize): (Problem, Set[Choice]) = {
+  def createOptimalCombination(problem: Problem, objective: Objective): (Problem, Set[Choice]) = {
     // select one Choice from each set in the multiset
     val chosenOptimalCombination: Set[Choice] =
       problem
@@ -40,7 +40,7 @@ trait MCKDVGenerator {
           dep =>
             if (chosenOptimalCombination(dep.dst)) objective match {
               case Maximize =>
-                // sets the weight for this dependency to some sentinel value outside of the costBound
+                // sets the weight for this dependency to some sentinel value outside of the range [0, costBound]
                 Dependency(2 * costBound, dep.dst)
               case Minimize =>
                 // sets the weight for this depencency to zero

@@ -28,6 +28,11 @@ trait PedrosoReiMCTS[S,A] extends MonteCarloTreeSearch[S,A]
   final var globalBestSimulation: Update = BigDecimal.decimal(0)
   final var globalWorstSimulation: Update = BigDecimal.decimal(0)
 
+  /**
+    * implementation should define this var, which should be used to track the best observed State
+    */
+  var bestSolution: S
+
   final override def rewardOrdering: Ordering[Reward] = scala.math.Ordering.Double
 
   final override type Tree = MCTreePedrosoReiReward[S,A]
