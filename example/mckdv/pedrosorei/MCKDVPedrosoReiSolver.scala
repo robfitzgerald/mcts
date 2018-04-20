@@ -9,8 +9,8 @@ import cse.fitzgero.mcts.example.mckdv.implementation.MCKDV._
   */
 class MCKDVPedrosoReiSolver(val problem: Problem, val seed: Long = 0L, val timeBudget: Long = 5000L, val objective: Objective = Maximize) extends MCKDVPedrosoReiMCTS {
 
-  globalBestSimulation = objective.defaultBest
-  globalWorstSimulation = objective.defaultWorst
+  override var globalBestSimulation: BigDecimal = objective.defaultBest
+  override var globalWorstSimulation: BigDecimal = objective.defaultWorst
   override var bestSolution: Selection = Set()
 
   override def evaluateTerminal(state: Selection): Update = costOfSelection(state, problem.dependencies)

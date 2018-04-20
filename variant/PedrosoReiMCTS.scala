@@ -25,8 +25,8 @@ trait PedrosoReiMCTS[S,A] extends MonteCarloTreeSearch[S,A]
 
   // these are updated by updateSearchCoefficients in the implementing class
   // best and worst depend on maximizing vs. minimizing objective
-  final var globalBestSimulation: Update = BigDecimal.decimal(0)
-  final var globalWorstSimulation: Update = BigDecimal.decimal(0)
+  var globalBestSimulation: Update
+  var globalWorstSimulation: Update
 
   /**
     * implementation should define this var, which should be used to track the best observed State

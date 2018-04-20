@@ -12,18 +12,21 @@ object UCT_PedrosoRei {
   sealed trait Objective {
     def defaultBest: BigDecimal
     def defaultWorst: BigDecimal
+    def defaultSimulation: BigDecimal
     def isBetterThanOrEqualTo(a: BigDecimal, b: BigDecimal): Boolean
     def isWorseThan(a: BigDecimal, b: BigDecimal): Boolean
   }
   case object Minimize extends Objective {
     override def defaultBest: BigDecimal = UpperBounds
     override def defaultWorst: BigDecimal = LowerBounds
+    override def defaultSimulation: BigDecimal = UpperBounds
     override def isBetterThanOrEqualTo(a: BigDecimal, b: BigDecimal): Boolean = a <= b
     def isWorseThan(a: BigDecimal, b: BigDecimal): Boolean = a > b
   }
   case object Maximize extends Objective {
     override def defaultBest: BigDecimal = LowerBounds
     override def defaultWorst: BigDecimal = UpperBounds
+    override def defaultSimulation: BigDecimal = LowerBounds
     override def isBetterThanOrEqualTo(a: BigDecimal, b: BigDecimal): Boolean = a >= b
     def isWorseThan(a: BigDecimal, b: BigDecimal): Boolean = a < b
   }

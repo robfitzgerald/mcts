@@ -48,7 +48,7 @@ class MCTreePedrosoReiReward[S, A] (
   /**
     * holds the best simulation value that this node has seen
     */
-  var bestSimulation: BigDecimal = BigDecimal.decimal(0)
+  var bestSimulation: BigDecimal = objective.defaultSimulation
 
   /**
     * accumulated simulation results at this node. used to calculate averageSimulation
