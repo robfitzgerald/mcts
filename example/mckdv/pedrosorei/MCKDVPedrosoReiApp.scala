@@ -47,7 +47,7 @@ object MCKDVPedrosoReiApp extends App {
 
   println(s"\ntimes: $timeRange n: $nRange k: $kRange trials: $trials costBound: $costBound objective: ${conf.objective()}")
   println(f"expected duration of experiments: $experimentsDurMinutes%.2f minutes.\n")
-  println("n,k,timeBudget,avgOptimalCost,avgSearchCost,orderFromOptimal,completeSolutions,avgIterations")
+  println("n,k,timeBudget,avgOptimalCost,avgSearchCost,orderFromOptimal,completeSolutions,foundTrueOptimal,avgIterations")
 
   for {
     timeBudget <- timeRange
@@ -56,6 +56,6 @@ object MCKDVPedrosoReiApp extends App {
   } {
     val experimentRunner = MCKDVPedrosoReiExperiment(random, costBound, objective)
     val result = experimentRunner.run(n,k,trials,timeBudget)
-    println(f"$n,$k,$timeBudget,${result.avgOptimalCost},${result.avgSearchCost},${orderOfMagnitudeToOptimal(result.sumSearchCost, result.sumOptimalCostBaseline)}%.2f,${result.completeSolutions},${result.avgIterations}")
+    println(f"$n,$k,$timeBudget,${result.avgOptimalCost},${result.avgSearchCost},${orderOfMagnitudeToOptimal(result.sumSearchCost, result.sumOptimalCostBaseline)}%.2f,${result.completeSolutions},${result.optimalSolutions},${result.avgIterations}")
   }
 }

@@ -4,9 +4,9 @@ import cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction.UCT_PedrosoRei.
 import cse.fitzgero.mcts.example.mckdv.implementation.{MCKDV, MCKDVGenerator}
 
 class MCKDVPedrosoReiExperiment(val random: scala.util.Random, val costBound: Int, val objective: Objective) extends MCKDVGenerator {
-    case class MCKDVExperimentResult(sumOptimalCostBaseline: BigDecimal, sumOptimalCostForComparisons: BigDecimal, sumSearchCost: BigDecimal, avgOptimalCost: BigDecimal, avgSearchCost: BigDecimal, completeSolutions: Int, avgIterations: Long)
+    case class MCKDVExperimentResult(sumOptimalCostBaseline: BigDecimal, sumOptimalCostForComparisons: BigDecimal, sumSearchCost: BigDecimal, avgOptimalCost: BigDecimal, avgSearchCost: BigDecimal, completeSolutions: Int, optimalSolutions: Int, avgIterations: Long)
   def run(n: Int, k: Int, trials: Int, timeBudget: Long): MCKDVExperimentResult = {
-    val (optCost, optCostForComparisons, searchCost, completeSolutions, iterations) = (1 to trials).map {
+    val (optCost, optCostForComparisons, searchCost, completeSolutions, optimalSolutions, iterations) = (1 to trials).map {
       m => {
         val (problem, optimal) = genProblem(n,k,objective)
         val optCostBaseline = MCKDV.costOfSelection(optimal, problem.dependencies)
@@ -16,22 +16,15 @@ class MCKDVPedrosoReiExperiment(val random: scala.util.Random, val costBound: In
         val searchCost = MCKDV.costOfSelection(solver.bestSolution, problem.dependencies)
         val completeSolution = if (solver.bestSolution.size == n) 1 else 0
         val optCostForComparisons = if (completeSolution == 1) optCostBaseline else BigDecimal(0)
-//        println(s"problem $m")
-//        println(problem)
-//        println(optimal)
-//        println(s"optimal $m")
-//        println(tree.printTree(2))
-//        println(s"Tree Search complete with ${tree.visits} iterations, optimal cost: $optCost; search cost: $searchCost")
-//        println(s"best $m")
-//        println(solver.bestGame(tree).toSet)
-        (optCostBaseline,optCostForComparisons,searchCost,completeSolution,iterations)
+        val gotItGood = if (optCostBaseline.toBigInt == searchCost.toBigInt) 1 else 0
+        (optCostBaseline,optCostForComparisons,searchCost,completeSolution,gotItGood,iterations)
       }
     }.reduce {
       (a,b) => {
-        (a._1+b._1,a._2+b._2,a._3+b._3,a._4+b._4,a._5+b._5)
+        (a._1+b._1,a._2+b._2,a._3+b._3,a._4+b._4,a._5+b._5,a._6+b._6)
       }
     }
-    MCKDVExperimentResult(optCost, optCostForComparisons, searchCost, optCost/trials, searchCost/trials, completeSolutions, iterations/trials)
+    MCKDVExperimentResult(optCost, optCostForComparisons, searchCost, optCost/trials, searchCost/trials, completeSolutions, optimalSolutions, iterations/trials)
   }
 }
 
