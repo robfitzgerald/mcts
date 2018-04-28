@@ -16,7 +16,7 @@ class MCTreePedrosoReiReward[S, A] (
   override val action: Option[A],
   override val state: S,
   objective: Objective
-) extends MonteCarloTreeArbitraryUpdate [S,A,Double,BigDecimal,UCTScalarPedrosoReiReward.Coefficients,MCTreePedrosoReiReward[S, A]] {
+) extends MonteCarloTree [S,A,Double,BigDecimal,UCTScalarPedrosoReiReward.Coefficients,MCTreePedrosoReiReward[S, A]] {
 
   /**
     * stores the most recently calculated reward value for this node

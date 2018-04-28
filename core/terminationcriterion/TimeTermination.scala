@@ -2,18 +2,16 @@ package cse.fitzgero.mcts.core.terminationcriterion
 
 import java.time.Instant
 
-import cse.fitzgero.mcts.tree.MonteCarloTreeArbitraryUpdate
+import cse.fitzgero.mcts.tree.MonteCarloTree
 
-class TimeTermination02 [S,A,N <: MonteCarloTreeArbitraryUpdate[S,A,_,_,_,_]] (
+class TimeTermination [S,A,N <: MonteCarloTree[S,A,_,_,_,_]] (
   val computationTimeBudget: Long
-) extends TerminationCriterion02[S,A,N] {
+) extends TerminationCriterion[S,A,N] {
   var startTime: Long = 0L
   def init(): Unit = {
     startTime = Instant.now.toEpochMilli
   }
   def withinComputationalBudget(monteCarloTree: N): Boolean = {
-    //    val now = Instant.now.toEpochMilli
-    //    println(s"startTime: $startTime now: $now within computational budget: ${now - startTime < computationTimeBudget}")
     Instant.now.toEpochMilli - startTime < computationTimeBudget
   }
 
@@ -23,7 +21,7 @@ class TimeTermination02 [S,A,N <: MonteCarloTreeArbitraryUpdate[S,A,_,_,_,_]] (
   }
 }
 
-object TimeTermination02 {
-  def apply[S,A,N <: MonteCarloTreeArbitraryUpdate[S,A,_,_,_,_]](computationTimeBudget: Long): TimeTermination02[S,A,N] =
-    new TimeTermination02[S,A,N](computationTimeBudget)
+object TimeTermination {
+  def apply[S,A,N <: MonteCarloTree[S,A,_,_,_,_]](computationTimeBudget: Long): TimeTermination[S,A,N] =
+    new TimeTermination[S,A,N](computationTimeBudget)
 }

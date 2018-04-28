@@ -14,7 +14,7 @@ import cse.fitzgero.mcts.algorithm.samplingpolicy.scalar.UCTScalarStandardReward
 class MCTreeStandardReward[S, A] (
   override val action: Option[A],
   override val state: S
-)extends MonteCarloTreeArbitraryUpdate [S,A,Double,Double,UCTScalarStandardReward.Coefficients,MCTreeStandardReward[S, A]] {
+)extends MonteCarloTree [S,A,Double,Double,UCTScalarStandardReward.Coefficients,MCTreeStandardReward[S, A]] {
 
   var reward: Double = 0D
 

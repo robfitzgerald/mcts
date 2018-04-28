@@ -1,10 +1,10 @@
 package cse.fitzgero.mcts.core.terminationcriterion
 
-import cse.fitzgero.mcts.tree.MonteCarloTreeArbitraryUpdate
+import cse.fitzgero.mcts.tree.MonteCarloTree
 
-class IterationTermination [S,A,N <: MonteCarloTreeArbitraryUpdate[S,A,_,_,_,_]] (
+class IterationTermination [S,A,N <: MonteCarloTree[S,A,_,_,_,_]] (
   val iterationThreshold: Long
-) extends TerminationCriterion02[S,A,N] {
+) extends TerminationCriterion[S,A,N] {
   var iter = 0L
   def init(): Unit = {}
   def withinComputationalBudget(monteCarloTree: N): Boolean = {
@@ -17,6 +17,6 @@ class IterationTermination [S,A,N <: MonteCarloTreeArbitraryUpdate[S,A,_,_,_,_]]
 }
 
 object IterationTermination {
-  def apply[S,A,N <: MonteCarloTreeArbitraryUpdate[S,A,_,_,_,_]](iterationThreshold: Long): IterationTermination[S,A,N] =
+  def apply[S,A,N <: MonteCarloTree[S,A,_,_,_,_]](iterationThreshold: Long): IterationTermination[S,A,N] =
     new IterationTermination[S,A,N](iterationThreshold)
 }

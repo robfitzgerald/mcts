@@ -15,7 +15,7 @@ import cse.fitzgero.mcts.distribution._
 class MCTreeWithDistribution[S, A] (
   override val action: Option[A],
   override val state: S
-)extends MonteCarloTreeArbitraryUpdate [S,A,RunningDistribution,Observation,Coefficients,MCTreeWithDistribution[S, A]]{
+)extends MonteCarloTree [S,A,RunningDistribution,Observation,Coefficients,MCTreeWithDistribution[S, A]]{
   var reward: RunningDistribution = RunningDistribution()
 
   override def reward(coefficients: Coefficients): RunningDistribution = {
