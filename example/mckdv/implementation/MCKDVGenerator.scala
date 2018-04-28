@@ -39,10 +39,10 @@ trait MCKDVGenerator {
         val updatedDeps = thisChoiceDependencies.map {
           dep =>
             if (chosenOptimalCombination(dep.dst)) objective match {
-              case Maximize =>
+              case _:Maximize =>
                 // sets the weight for this dependency to some sentinel value outside of the range [0, costBound]
                 Dependency(2 * costBound, dep.dst)
-              case Minimize =>
+              case _:Minimize =>
                 // sets the weight for this depencency to zero
                 Dependency(0, dep.dst)
             }
@@ -65,7 +65,7 @@ trait MCKDVGenerator {
     }
   }
 
-  def genDependencies(multiset: Multiset, objective: Objective = Maximize): Dependencies =
+  def genDependencies(multiset: Multiset, objective: Objective): Dependencies =
     multiset.aggregate(Map.empty[Choice, List[Dependency]]) (
       (acc, set) => {
         acc ++ set.foldLeft(Map.empty[Choice, List[Dependency]]) {
@@ -99,11 +99,11 @@ trait MCKDVGenerator {
     val deps: List[Dependency] = otherChoices.map{
       otherChoice =>
         objective match {
-          case Maximize =>
+          case _: Maximize =>
             // sets the weight for this dependency as a random value in the range [0, costBound). the true optimal dependency value will be a sentinel value at 2 * costBound.
             val costBetweenZeroAndCostBound: Int = random.nextInt(costBound)
             Dependency(costBetweenZeroAndCostBound, otherChoice)
-          case Minimize =>
+          case _: Minimize =>
             // sets the weight for this dependency as a random value in the range [costBound, costBound * 2). the true optimal dependency value will be zero.
             val costAboveCostBound: Int = random.nextInt(costBound) + costBound
             Dependency(costAboveCostBound, otherChoice)

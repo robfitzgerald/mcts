@@ -7,7 +7,7 @@ import cse.fitzgero.mcts.example.mckdv.implementation.MCKDV._
 /**
   * Mutliple Choice Knapsack Problems with Dependent Weights
   */
-class MCKDVPedrosoReiSolver(val problem: Problem, val seed: Long = 0L, val timeBudget: Long = 5000L, val objective: Objective = Maximize) extends MCKDVPedrosoReiMCTS {
+class MCKDVPedrosoReiSolver(val problem: Problem, val seed: Long = 0L, val timeBudget: Long = 5000L, val objective: Objective) extends MCKDVPedrosoReiMCTS {
 
   override var globalBestSimulation: BigDecimal = objective.defaultBest
   override var globalWorstSimulation: BigDecimal = objective.defaultWorst
@@ -23,13 +23,6 @@ class MCKDVPedrosoReiSolver(val problem: Problem, val seed: Long = 0L, val timeB
 }
 
 object MCKDVPedrosoReiSolver {
-
-  def apply(problem: Problem): MCKDVPedrosoReiSolver =
-    new MCKDVPedrosoReiSolver(problem)
-
-  def apply(problem: Problem, seed: Long, timeBudget: Long): MCKDVPedrosoReiSolver =
-    new MCKDVPedrosoReiSolver(problem, seed, timeBudget)
-
   def apply(problem: Problem, seed: Long, timeBudget: Long, objective: Objective): MCKDVPedrosoReiSolver =
     new MCKDVPedrosoReiSolver(problem, seed, timeBudget, objective)
 }

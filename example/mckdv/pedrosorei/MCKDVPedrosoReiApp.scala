@@ -28,10 +28,6 @@ object MCKDVPedrosoReiApp extends App {
   val kRange = parseRange(conf.kRange())
   val trials = conf.trials()
   val costBound = conf.costBound()
-  val objective =
-    if (conf.objective() == "maximize") Maximize
-    else if (conf.objective() == "minimize") Minimize
-    else throw new IllegalArgumentException("invalid objective name")
 
   def orderOfMagnitudeToOptimal(searchCost: BigDecimal, optimalCost: BigDecimal): Double = {
     (searchCost/optimalCost).toDouble
@@ -39,11 +35,11 @@ object MCKDVPedrosoReiApp extends App {
 
   val random = scala.util.Random
   val experimentsDurMinutes: Double =
-    (
-      timeRange.map {
-        _ * nRange.size * kRange.size
-      }.sum * trials
-      ) / (1000D * 60D)
+  (
+  timeRange.map {
+    _ * nRange.size * kRange.size
+  }.sum * trials
+  ) / (1000D * 60D)
 
   println(s"\ntimes: $timeRange n: $nRange k: $kRange trials: $trials costBound: $costBound objective: ${conf.objective()}")
   println(f"expected duration of experiments: $experimentsDurMinutes%.2f minutes.\n")
@@ -54,6 +50,12 @@ object MCKDVPedrosoReiApp extends App {
     n <- nRange
     k <- kRange
   } {
+    val lowerBounds = BigDecimal(0)
+    val upperBounds = BigDecimal(n * costBound * 2)
+    val objective =
+      if (conf.objective() == "maximize") Maximize(lowerBounds, upperBounds)
+      else if (conf.objective() == "minimize") Minimize(lowerBounds, upperBounds)
+      else throw new IllegalArgumentException("invalid objective name")
     val experimentRunner = MCKDVPedrosoReiExperiment(random, costBound, objective)
     val result = experimentRunner.run(n,k,trials,timeBudget)
     println(f"$n,$k,$timeBudget,${result.avgOptimalCost},${result.avgSearchCost},${orderOfMagnitudeToOptimal(result.sumSearchCost, result.sumOptimalCostBaseline)}%.2f,${result.completeSolutions},${result.optimalSolutions},${result.avgIterations}")

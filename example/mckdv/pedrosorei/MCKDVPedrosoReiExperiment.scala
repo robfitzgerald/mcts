@@ -29,7 +29,5 @@ class MCKDVPedrosoReiExperiment(val random: scala.util.Random, val costBound: In
 }
 
 object MCKDVPedrosoReiExperiment {
-  def apply(costBound: Int): MCKDVPedrosoReiExperiment = new MCKDVPedrosoReiExperiment(scala.util.Random, costBound, Maximize)
-  def apply(random: scala.util.Random, costBound: Int): MCKDVPedrosoReiExperiment = new MCKDVPedrosoReiExperiment(random, costBound, Maximize)
   def apply(random: scala.util.Random, costBound: Int, objective: Objective): MCKDVPedrosoReiExperiment = new MCKDVPedrosoReiExperiment(random, costBound, objective)
 }

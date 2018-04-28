@@ -77,12 +77,6 @@ class MCTreePedrosoReiReward[S, A] (
 
 
 object MCTreePedrosoReiReward {
-  def apply[S,A](state: S): MCTreePedrosoReiReward[S,A] =
-    new MCTreePedrosoReiReward[S,A](state = state, action = None, objective = Maximize)
-
-  def apply[S,A](state: S, action: Option[A]): MCTreePedrosoReiReward[S,A] =
-    new MCTreePedrosoReiReward(state = state, action = action, objective = Maximize)
-
   def apply[S,A](state: S, action: Option[A], objective: Objective): MCTreePedrosoReiReward[S,A] =
     new MCTreePedrosoReiReward(state = state, action = action, objective = objective)
 }

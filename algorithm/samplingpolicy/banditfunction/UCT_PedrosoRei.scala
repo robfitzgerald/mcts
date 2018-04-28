@@ -6,8 +6,8 @@ package cse.fitzgero.mcts.algorithm.samplingpolicy.banditfunction
   */
 object UCT_PedrosoRei {
 
-  final val LowerBounds: BigDecimal = BigDecimal.decimal(0)
-  final val UpperBounds: BigDecimal = BigDecimal("9" * 50)
+//  final val LowerBounds: BigDecimal = BigDecimal.decimal(0)
+//  final val UpperBounds: BigDecimal = BigDecimal("9" * 50)
 
   sealed trait Objective {
     def defaultBest: BigDecimal
@@ -16,17 +16,17 @@ object UCT_PedrosoRei {
     def isBetterThanOrEqualTo(a: BigDecimal, b: BigDecimal): Boolean
     def isWorseThan(a: BigDecimal, b: BigDecimal): Boolean
   }
-  case object Minimize extends Objective {
-    override def defaultBest: BigDecimal = UpperBounds
-    override def defaultWorst: BigDecimal = LowerBounds
-    override def defaultSimulation: BigDecimal = UpperBounds
+  case class Minimize(lowerBounds: BigDecimal = BigDecimal.decimal(0), upperBounds: BigDecimal = BigDecimal("9" * 50)) extends Objective {
+    override def defaultBest: BigDecimal = upperBounds
+    override def defaultWorst: BigDecimal = lowerBounds
+    override def defaultSimulation: BigDecimal = upperBounds
     override def isBetterThanOrEqualTo(a: BigDecimal, b: BigDecimal): Boolean = a <= b
     def isWorseThan(a: BigDecimal, b: BigDecimal): Boolean = a > b
   }
-  case object Maximize extends Objective {
-    override def defaultBest: BigDecimal = LowerBounds
-    override def defaultWorst: BigDecimal = UpperBounds
-    override def defaultSimulation: BigDecimal = LowerBounds
+  case class Maximize(lowerBounds: BigDecimal = BigDecimal.decimal(0), upperBounds: BigDecimal = BigDecimal("9" * 50)) extends Objective {
+    override def defaultBest: BigDecimal = lowerBounds
+    override def defaultWorst: BigDecimal = upperBounds
+    override def defaultSimulation: BigDecimal = lowerBounds
     override def isBetterThanOrEqualTo(a: BigDecimal, b: BigDecimal): Boolean = a >= b
     def isWorseThan(a: BigDecimal, b: BigDecimal): Boolean = a < b
   }
