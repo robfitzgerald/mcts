@@ -29,5 +29,7 @@ trait RewardDistributionSPMCTS[S,A] extends MonteCarloTreeSearch[S,A]
 
   final override def createNewNode(state: S, action: Option[A]): MCTreeWithDistribution[S, A] =
     MCTreeWithDistribution[S,A](state, action)
+
+  override def updateMetaData(simulationResult: Update, node: Tree, state: S): Coefficients = getSearchCoefficients(node)
 }
 

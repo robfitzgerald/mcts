@@ -28,5 +28,7 @@ trait StandardMCTS[S,A] extends MonteCarloTreeSearch[S,A]
 
   final override def createNewNode(state: S, action: Option[A]): MCTreeStandardReward[S, A] =
     MCTreeStandardReward(state, action)
+
+  override def updateMetaData(simulationResult: Double, node: Tree, state: S): Coefficients = getSearchCoefficients(node)
 }
 

@@ -41,5 +41,14 @@ trait PedrosoReiMCTS[S,A] extends MonteCarloTreeSearch[S,A]
 
   final override def createNewNode(state: S, action: Option[A]): MCTreePedrosoReiReward[S, A] =
     MCTreePedrosoReiReward(state, action, objective)
+
+  final override def updateMetaData(simulationResult: Update, node: Tree, leafState: S): Coefficients = {
+    if (objective.isWorseThan(simulationResult, globalWorstSimulation)) globalWorstSimulation = simulationResult
+    if (objective.isBetterThanOrEqualTo(simulationResult, globalBestSimulation)) {
+      bestSolution = leafState
+      globalBestSimulation = simulationResult
+    }
+    UCTScalarPedrosoReiReward.Coefficients(getSearchCoefficients(node).Cp, globalBestSimulation, globalWorstSimulation)
+  }
 }
 

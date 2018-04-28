@@ -16,9 +16,6 @@ class MCKDVStandardMCTSSolver (val problem: Problem, val costBound: Int, val see
   override def getSearchCoefficients(tree: Tree): Coefficients = UCTScalarStandardReward.ExplorationCoefficient
 
   override def getDecisionCoefficients(tree: Tree): Coefficients = UCTScalarStandardReward.DecisionCoefficient
-
-  // there is no update in standard MCTS
-  override def updateMetaData(simulationResult: Double, node: Tree): Coefficients = UCTScalarStandardReward.ExplorationCoefficient
 }
 
 object MCKDVStandardMCTSSolver {

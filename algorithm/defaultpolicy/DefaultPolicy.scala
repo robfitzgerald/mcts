@@ -6,12 +6,12 @@ import cse.fitzgero.mcts.MonteCarloTreeSearch
 
 trait DefaultPolicy[S,A] extends MonteCarloTreeSearch[S,A] {
 
-  override protected final def defaultPolicy(monteCarloTree: Tree): Update = {
+  override protected final def defaultPolicy(monteCarloTree: Tree): (Update, S)= {
     if (stateIsNonTerminal(monteCarloTree.state)) {
 
       // simulate moves until a terminal game state is found, then evaluate
       @tailrec
-      def _defaultPolicy(state: S): Update = {
+      def _defaultPolicy(state: S): (Update, S) = {
         if (stateIsNonTerminal(state)) {
           selectAction(generatePossibleActions(state)) map { applyAction(state,_) } match {
             case None =>
@@ -21,13 +21,13 @@ trait DefaultPolicy[S,A] extends MonteCarloTreeSearch[S,A] {
               _defaultPolicy(nextState)
           }
         } else {
-          evaluateTerminal(state)
+          (evaluateTerminal(state), state)
         }
       }
 
       _defaultPolicy(monteCarloTree.state)
     } else {
-      evaluateTerminal(monteCarloTree.state)
+      (evaluateTerminal(monteCarloTree.state), monteCarloTree.state)
     }
   }
 }

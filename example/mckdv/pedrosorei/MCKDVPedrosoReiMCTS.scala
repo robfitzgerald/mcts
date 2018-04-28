@@ -15,15 +15,6 @@ trait MCKDVPedrosoReiMCTS extends PedrosoReiMCTS[Selection, Choice] {
 
   // user must implement evaluateTerminal, getSearchCoefficients, and getDecisionCoefficients
 
-  final override def updateMetaData(simulationResult: Update, node: Tree): Coefficients = {
-    if (objective.isWorseThan(simulationResult, globalWorstSimulation)) globalWorstSimulation = simulationResult
-    if (objective.isBetterThanOrEqualTo(simulationResult, globalBestSimulation)) {
-      globalBestSimulation = simulationResult
-      if (!stateIsNonTerminal(node.state)) bestSolution = node.state
-    }
-    Coefficients(ExplorationCoefficient, globalBestSimulation, globalWorstSimulation)
-  }
-
   final override def applyAction(state: Selection, action: Choice): Selection = state + action
 
   final override def generatePossibleActions(state: Selection): Seq[Choice] = {
