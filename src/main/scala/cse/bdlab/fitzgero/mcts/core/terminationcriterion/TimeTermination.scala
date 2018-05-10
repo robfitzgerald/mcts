@@ -23,3 +23,8 @@ class TimeTermination [S,A,N <: MonteCarloTree[S,A,_,_,_,_]] (endTime: Long) ext
 
   override def toString: String = s"TimeTermination endTime $endTime"
 }
+
+object TimeTermination {
+  def apply[S,A,N <: MonteCarloTree[S,A,_,_,_,_]](computationTimeBudget: Long): TimeTermination[S,A,N] =
+    new TimeTermination[S,A,N](computationTimeBudget)
+}
