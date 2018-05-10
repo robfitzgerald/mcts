@@ -1,6 +1,6 @@
 package cse.bdlab.fitzgero.mcts.example.mckdv.standardmcts
 
-import cse.bdlab.fitzgero.mcts.core.terminationcriterion.{IterationTermination, TerminationCriterion, TimeTermination}
+import cse.bdlab.fitzgero.mcts.core.terminationcriterion.{IterationTermination, TerminationCriterion, DurationTermination}
 import cse.bdlab.fitzgero.mcts.core.{BuiltInRandomGenerator, RandomGenerator, RandomSelection}
 import cse.bdlab.fitzgero.mcts.example.mckdv.implementation.MCKDV._
 import cse.bdlab.fitzgero.mcts.variant.StandardMCTS
@@ -30,6 +30,6 @@ trait MCKDVStandardMCTS extends StandardMCTS[Selection, Choice] {
   final override def stateIsNonTerminal(state: Selection): Boolean = state.size != problem.multiset.size
   final override def startState: Selection = Set()
   final override def random: RandomGenerator = new BuiltInRandomGenerator(Some(seed))
-  final override val terminationCriterion: TerminationCriterion[Selection, Choice, Tree] = TimeTermination[Selection,Choice,Tree](timeBudget)
+  final override val terminationCriterion: TerminationCriterion[Selection, Choice, Tree] = DurationTermination[Selection,Choice,Tree](timeBudget)
   final override val actionSelection = RandomSelection(random, generatePossibleActions)
 }

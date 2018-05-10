@@ -1,27 +1,25 @@
 package cse.bdlab.fitzgero.mcts.core.terminationcriterion
 
-import java.time.Instant
-
 import cse.bdlab.fitzgero.mcts.tree.MonteCarloTree
 
-class TimeTermination [S,A,N <: MonteCarloTree[S,A,_,_,_,_]] (
-  val computationTimeBudget: Long
-) extends TerminationCriterion[S,A,N] {
-  var startTime: Long = 0L
-  def init(): Unit = {
-    startTime = Instant.now.toEpochMilli
-  }
-  def withinComputationalBudget(monteCarloTree: N): Boolean = {
-    Instant.now.toEpochMilli - startTime < computationTimeBudget
+/**
+  * the budget for this MCTS terminates at a specific time
+  * @param endTime an Epoch time in milliseconds that we should interrupt this MCTS
+  */
+class TimeTermination [S,A,N <: MonteCarloTree[S,A,_,_,_,_]] (endTime: Long) extends TerminationCriterion[S,A,N] {
+  /**
+    * nothing to initialize
+    */
+  override def init(): Unit = {}
+
+  /**
+    * tests if the current time has surpassed the provided end time
+    * @param monteCarloTree ignored
+    * @return
+    */
+  override def withinComputationalBudget(monteCarloTree: N): Boolean = {
+    System.currentTimeMillis < endTime
   }
 
-  override def toString: String = {
-    val endTimeShouldBe = startTime + computationTimeBudget
-    s"TimeTermination startTime: $startTime computationalTimeBudget: $computationTimeBudget endTimeShouldBe: $endTimeShouldBe"
-  }
-}
-
-object TimeTermination {
-  def apply[S,A,N <: MonteCarloTree[S,A,_,_,_,_]](computationTimeBudget: Long): TimeTermination[S,A,N] =
-    new TimeTermination[S,A,N](computationTimeBudget)
+  override def toString: String = s"TimeTermination endTime $endTime"
 }

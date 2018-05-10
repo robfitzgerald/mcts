@@ -5,7 +5,7 @@ import java.time.Instant
 import cse.bdlab.fitzgero.mcts.algorithm.samplingpolicy.distribution.UCTDistributionSPMCTSReward
 import cse.bdlab.fitzgero.mcts.algorithm.samplingpolicy.distribution.UCTDistributionSPMCTSReward._
 import cse.bdlab.fitzgero.mcts.core._
-import cse.bdlab.fitzgero.mcts.core.terminationcriterion.TimeTermination
+import cse.bdlab.fitzgero.mcts.core.terminationcriterion.DurationTermination
 import cse.bdlab.fitzgero.mcts.distribution.{DoublePrecisionDistribution, Observation, RunningDistribution}
 import cse.bdlab.fitzgero.mcts.example.tictactoe.TicTacToe.Board._
 import cse.bdlab.fitzgero.mcts.example.tictactoe.TicTacToe._
@@ -42,7 +42,7 @@ class TicTacToeDistributionSP_UCTSolver(
   override def startState: Board = Board(X)
   override def random: RandomGenerator = new BuiltInRandomGenerator(Some(seed))
 //  override val samplingMethod =  UCTScalarStandardReward()
-  override val terminationCriterion: TimeTermination[Board,Move,Tree] = TimeTermination[Board,Move,Tree](timeBudget)
+  override val terminationCriterion: DurationTermination[Board,Move,Tree] = DurationTermination[Board,Move,Tree](timeBudget)
   override val actionSelection = RandomSelection(random, generatePossibleActions)
 
 }

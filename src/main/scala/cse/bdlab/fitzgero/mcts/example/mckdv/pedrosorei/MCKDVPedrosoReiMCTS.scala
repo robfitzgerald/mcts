@@ -1,7 +1,7 @@
 package cse.bdlab.fitzgero.mcts.example.mckdv.pedrosorei
 
 import cse.bdlab.fitzgero.mcts.algorithm.samplingpolicy.scalar.UCTScalarPedrosoReiReward.{Coefficients, ExplorationCoefficient}
-import cse.bdlab.fitzgero.mcts.core.terminationcriterion.{TerminationCriterion, TimeTermination}
+import cse.bdlab.fitzgero.mcts.core.terminationcriterion.{TerminationCriterion, DurationTermination}
 import cse.bdlab.fitzgero.mcts.core.{BuiltInRandomGenerator, RandomGenerator, RandomSelection}
 import cse.bdlab.fitzgero.mcts.example.mckdv.implementation.MCKDV._
 import cse.bdlab.fitzgero.mcts.variant.PedrosoReiMCTS
@@ -34,6 +34,6 @@ trait MCKDVPedrosoReiMCTS extends PedrosoReiMCTS[Selection, Choice] {
 
   final override def random: RandomGenerator = new BuiltInRandomGenerator(Some(seed))
 
-  final override val terminationCriterion: TerminationCriterion[Selection, Choice, Tree] = TimeTermination[Selection,Choice,Tree](timeBudget)
+  final override val terminationCriterion: TerminationCriterion[Selection, Choice, Tree] = DurationTermination[Selection,Choice,Tree](timeBudget)
   final override val actionSelection = RandomSelection(random, generatePossibleActions)
 }
