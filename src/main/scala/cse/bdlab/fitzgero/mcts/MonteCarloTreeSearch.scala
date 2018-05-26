@@ -94,8 +94,6 @@ trait MonteCarloTreeSearch[S,A] {
     */
   def startNode(state: S): Tree
 
-  def timeBudget: Long
-
 
   //////////////////////////////////////////////////////////////////////
   //////// utility operations. provided by the MCTS library ////////////
