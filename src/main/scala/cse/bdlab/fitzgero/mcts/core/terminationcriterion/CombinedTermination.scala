@@ -57,10 +57,10 @@ object CombinedTermination {
     * provides predefined instances of CombinationIteration constructors
     */
   object Predef {
-    def TimeAndIteration[S,A,N](endTime: Long, iterationThreshold: Long): CombinedTermination[S,A,N] =
+    def TimeAndIteration[S,A,N <: MonteCarloTree[S,A,_,_,_,_]](endTime: Long, iterationThreshold: Long): CombinedTermination[S,A,N] =
       new CombinedTermination[S,A,N](new TimeTermination[S,A,N](endTime), new IterationTermination[S,A,N](iterationThreshold), CombinedTermination.AND)
 
-    def TimeOrIteration[S,A,N](endTime: Long, iterationThreshold: Long): CombinedTermination[S,A,N] =
+    def TimeOrIteration[S,A,N <: MonteCarloTree[S,A,_,_,_,_]](endTime: Long, iterationThreshold: Long): CombinedTermination[S,A,N] =
       new CombinedTermination[S,A,N](new TimeTermination[S,A,N](endTime), new IterationTermination[S,A,N](iterationThreshold), CombinedTermination.OR)
   }
 }
