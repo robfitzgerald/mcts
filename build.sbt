@@ -1,6 +1,6 @@
 name := "mcts"
 
-version := "1.1.1"
+version := "1.1.5"
 
 scalaVersion := "2.11.8"
 

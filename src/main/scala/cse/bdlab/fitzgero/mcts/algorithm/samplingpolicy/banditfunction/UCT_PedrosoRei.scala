@@ -98,7 +98,7 @@ object UCT_PedrosoRei {
   def uctExploration(Cp: Double, parentVisits: Long, childVisits: Long): Double = {
     if (Cp == 0)
       0D
-    else if (childVisits == 0)
+    else if (childVisits == 0L)
       Double.PositiveInfinity
     else
       Cp * math.sqrt(math.log(parentVisits) / childVisits)

@@ -16,7 +16,7 @@ class MCTreePedrosoReiReward[S, A] (
   override val action: Option[A],
   override val state: S,
   objective: Objective
-) extends MonteCarloTree [S,A,Double,BigDecimal,UCTScalarPedrosoReiReward.Coefficients,MCTreePedrosoReiReward[S, A]] {
+) extends MonteCarloTree [S,A,Double,BigDecimal,UCTScalarPedrosoReiReward.Coefficients,MCTreePedrosoReiReward[S, A]] with Serializable {
 
   /**
     * stores the most recently calculated reward value for this node
@@ -30,7 +30,7 @@ class MCTreePedrosoReiReward[S, A] (
     */
   def reward(coefficients: UCTScalarPedrosoReiReward.Coefficients): Double = {
     val parentVisits: Long = parent() match {
-      case None => 0L
+      case None => visits // reward evaluation of the root will eval exploration as log(1/1) == 0D.
       case Some(p) => p.visits
     }
     storedReward = UCT_PedrosoRei(
@@ -76,7 +76,7 @@ class MCTreePedrosoReiReward[S, A] (
 }
 
 
-object MCTreePedrosoReiReward {
+object MCTreePedrosoReiReward extends Serializable {
   def apply[S,A](state: S, action: Option[A], objective: Objective): MCTreePedrosoReiReward[S,A] =
     new MCTreePedrosoReiReward(state = state, action = action, objective = objective)
 }

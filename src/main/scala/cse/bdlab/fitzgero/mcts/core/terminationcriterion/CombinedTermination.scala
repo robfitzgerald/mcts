@@ -27,12 +27,12 @@ class CombinedTermination [S,A,N <: MonteCarloTree[S,A,_,_,_,_]] (
   override def toString: String = s"CombinedTermination($a, $b)"
 }
 
-object CombinedTermination {
+object CombinedTermination extends Serializable {
 
   /**
     * a small set of binary boolean operators to use with the CombinedTermination class
     */
-  sealed trait TerminationCombineOp {
+  sealed trait TerminationCombineOp extends Serializable {
     def combine(a: Boolean, b: Boolean): Boolean
   }
   case object AND extends TerminationCombineOp {
@@ -56,7 +56,7 @@ object CombinedTermination {
   /**
     * provides predefined instances of CombinationIteration constructors
     */
-  object Predef {
+  object Predef extends Serializable {
     def TimeAndIteration[S,A,N <: MonteCarloTree[S,A,_,_,_,_]](endTime: Long, iterationThreshold: Long): CombinedTermination[S,A,N] =
       new CombinedTermination[S,A,N](new TimeTermination[S,A,N](endTime), new IterationTermination[S,A,N](iterationThreshold), CombinedTermination.AND)
 

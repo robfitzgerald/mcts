@@ -11,7 +11,7 @@ import scala.collection.GenMap
   * @tparam C a coefficient type, which can be used to guide updates
   * @tparam N the derived type (F-Bounded Polymorphic type)
   */
-trait MonteCarloTree[S,A,R,U,C,N <: MonteCarloTree[S,A,R,U,C,N]] {
+trait MonteCarloTree[S,A,R,U,C,N <: MonteCarloTree[S,A,R,U,C,N]] extends Serializable {
 
 
   /////////////////////////////////

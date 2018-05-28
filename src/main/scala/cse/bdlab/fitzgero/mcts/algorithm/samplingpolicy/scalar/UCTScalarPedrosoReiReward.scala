@@ -20,7 +20,7 @@ object UCTScalarPedrosoReiReward {
     * @param globalBestSimulation the best simulation value found so far
     * @param globalWorstSimulation the worst simulation value found so far
     */
-  case class Coefficients (Cp: Double, globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal)
+  case class Coefficients (Cp: Double, globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal) extends Serializable
 
   val ExplorationCoefficient: Double = 1D/0.707D
   val SearchCoefficient: Double = 0D
