@@ -30,9 +30,12 @@ class MCTreePedrosoReiReward[S, A] (
     */
   def reward(coefficients: UCTScalarPedrosoReiReward.Coefficients): Double = {
     val parentVisits: Long = parent() match {
-      case None => visits // reward evaluation of the root will eval exploration as log(1/1) == 0D.
-      case Some(p) => p.visits
+      case None =>
+        visits
+      case Some(p) =>
+        p.visits
     }
+
     storedReward = UCT_PedrosoRei(
       coefficients.globalBestSimulation,
       coefficients.globalWorstSimulation,
@@ -53,7 +56,7 @@ class MCTreePedrosoReiReward[S, A] (
   /**
     * accumulated simulation results at this node. used to calculate averageSimulation
     */
-  protected var averageSum: BigDecimal = BigDecimal.decimal(0)
+  var averageSum: BigDecimal = BigDecimal.decimal(0)
 
   /**
     * updates the node information related to UCT for combinatorial search

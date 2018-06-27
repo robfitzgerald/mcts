@@ -49,24 +49,23 @@ object UCT_PedrosoRei {
             childVisits: Long,
             parentVisits: Long,
             Cp: Double): Double = {
-    if (childVisits == 0L) Double.PositiveInfinity
-    else {
-      val X = pedrosoReiExploitationTerm(globalBestSimulation, globalWorstSimulation, childBestSimulation)
-      val E = pedrosoReiExplorationTerm(globalBestSimulation, globalWorstSimulation, childAverageSimulation, Cp, parentVisits, childVisits)
-      X + E
-    }
+
+    val X = pedrosoReiExploitationTerm(globalBestSimulation, globalWorstSimulation, childBestSimulation)
+    val E = pedrosoReiExplorationTerm(globalBestSimulation, globalWorstSimulation, childAverageSimulation, Cp, parentVisits, childVisits)
+    X + E
+
   }
 
 
   /**
-    * exploitation for combinatorial search, shown as equation 3 on pg 115
-    * @param globalBestSimulation
-    * @param globalWorstSimulation
-    * @param childBestSimulation
+    * exploitation for combinatorial search, shown as equation 3 on pg 115. desires a finite reward value in the range [0,1]
+    * @param globalBestSimulation the best simulation result seen
+    * @param globalWorstSimulation the worst simulation result seen
+    * @param childBestSimulation the best simulation result the child node has seen
     * @return
     */
   def pedrosoReiExploitationTerm(globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal, childBestSimulation: BigDecimal): Double = {
-    if (globalWorstSimulation == globalBestSimulation) Double.PositiveInfinity
+    if (globalWorstSimulation == globalBestSimulation) 0D
     else {
       pedrosoReiXTerm(globalBestSimulation,globalWorstSimulation,childBestSimulation)
     }
@@ -80,14 +79,15 @@ object UCT_PedrosoRei {
   }
 
   /**
-    * exploration for combinatorial search, shown as equations 4 and 5 on pg 116
-    * @param globalBestSimulation
-    * @param globalWorstSimulation
-    * @param childAverageSimulation
+    * exploration for combinatorial search, shown as equations 4 and 5 on pg 116. we desire a reward value in the range [0,inf)
+    * @param globalBestSimulation the best simulation result seen
+    * @param globalWorstSimulation the worst simulation result seen
+    * @param childAverageSimulation the average of simulation result values that the child node has seen
     * @return
     */
   def pedrosoReiExplorationTerm(globalBestSimulation: BigDecimal, globalWorstSimulation: BigDecimal, childAverageSimulation: BigDecimal, Cp: Double, parentVisits: Long, childVisits: Long): Double = {
-    if (globalWorstSimulation == globalBestSimulation) Double.PositiveInfinity
+    if (Cp == 0) 0D
+    else if (globalWorstSimulation == globalBestSimulation) Double.PositiveInfinity
     else {
       val XBar = pedrosoReiXTerm(globalBestSimulation, globalWorstSimulation, childAverageSimulation)
       val E = uctExploration(Cp, parentVisits, childVisits)
@@ -96,9 +96,9 @@ object UCT_PedrosoRei {
   }
 
   def uctExploration(Cp: Double, parentVisits: Long, childVisits: Long): Double = {
-    if (Cp == 0)
+    if (parentVisits == 0L) // math.log(0) == -inf
       0D
-    else if (childVisits == 0L)
+    else if (childVisits == 0L) // div/0!
       Double.PositiveInfinity
     else
       Cp * math.sqrt(math.log(parentVisits) / childVisits)
