@@ -33,14 +33,22 @@ trait PedrosoReiMCTS[S,A] extends MonteCarloTreeSearch[S,A]
     */
   var bestSolution: S
 
+  /**
+    * added 20181128. count allocations of new nodes.
+    */
+  var nodesCreated: Long = 0
+
   final override def rewardOrdering: Ordering[Reward] = scala.math.Ordering.Double
 
   final override type Tree = MCTreePedrosoReiReward[S,A]
 
   final override def startNode(s: S): MCTreePedrosoReiReward[S, A] = MCTreePedrosoReiReward(s, None, objective = objective)
 
-  final override def createNewNode(state: S, action: Option[A]): MCTreePedrosoReiReward[S, A] =
+  final override def createNewNode(state: S, action: Option[A]): MCTreePedrosoReiReward[S, A] = {
+    nodesCreated += 1
     MCTreePedrosoReiReward(state, action, objective)
+  }
+
 
   final override def updateMetaData(simulationResult: Update, node: Tree, leafState: S): Coefficients = {
     if (objective.isWorseThan(simulationResult, globalWorstSimulation)) globalWorstSimulation = simulationResult
