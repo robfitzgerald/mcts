@@ -1,24 +1,38 @@
-name := "mcts"
+lazy val scala212 = "2.12.10"
+lazy val scala211 = "2.11.12"
+lazy val supportedScalaVersions = List("2.12.10", "2.11.12")
 
-version := "1.2.0"
+ThisBuild / organization := "cse.bdlab"
+ThisBuild / version      := "1.3.1"
+ThisBuild / scalaVersion := "2.12.10"
 
-scalaVersion := "2.11.8"
+lazy val root = (project in file("."))
+  .settings(
+    crossScalaVersions := supportedScalaVersions,
+    name := "mcts",
+    libraryDependencies := deps,
+    scalacOptions := compilerOps
+  )
 
-// ~~~ ScalaTest
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.4"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
-libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
+lazy val deps = Seq(
 
-// ~~~ Scallop, used for command line parsing in example App
-libraryDependencies += "org.rogach" %% "scallop" % "3.1.0"
+  // ~~~ ScalaTest
+  "org.scalactic" %% "scalactic" % "3.0.4",
+  "org.scalatest" %% "scalatest" % "3.0.4" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
 
+  // ~~~ Scallop, used for command line parsing in example App
+  "org.rogach" %% "scallop" % "3.1.0",
 
-libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.25"
-libraryDependencies += "org.scalaz" %% "scalaz-effect" % "7.2.25"
+  // ~~~ Cats FP Library
+  "org.typelevel" %% "cats-core" % "2.1.1"
 
-scalacOptions ++= Seq(
+)
+
+lazy val compilerOps = Seq(
   "-unchecked",
   "-feature",
+  "-Ypartial-unification",
   "-language:reflectiveCalls",
   "-language:existentials",
   "-language:higherKinds",
