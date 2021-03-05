@@ -4,7 +4,7 @@ import scala.collection.BitSet
 
 import cats.kernel.Monoid
 
-import cse.bdlab.fitzgero.mcts.model.observation.Observations
+import cse.bdlab.fitzgero.mcts.model.observation.Observation
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.MultiChoiceState
 
 /**
@@ -27,7 +27,7 @@ object NewTree {
     * @tparam O observations type
     * @return a tree root instance
     */
-  def createRoot[O <: Observations](rootActions: Int)(implicit m: Monoid[O]): NewTree = {
+  def createRoot[O <: Observation](rootActions: Int)(implicit m: Monoid[O]): NewTree = {
     new NewTree.BranchN(BitSet(), m.empty, Array.fill(rootActions)(None))
   }
 
@@ -38,7 +38,7 @@ object NewTree {
     */
   final class Leaf(
     val state: MultiChoiceState,
-    val observations: Observations
+    var observations: Observation
   ) extends NewTree
 
 //  /**
@@ -49,7 +49,7 @@ object NewTree {
 //    */
   final class Branch1(
     val state: MultiChoiceState,
-    val observations: Observations,
+    var observations: Observation,
     val childAction: Int,
     var child: NewTree
   ) extends NewTree
@@ -62,7 +62,7 @@ object NewTree {
     */
   final class BranchN(
     val state: MultiChoiceState,
-    val observations: Observations,
+    var observations: Observation,
     var children: Array[Option[NewTree]],
   ) extends NewTree
 }

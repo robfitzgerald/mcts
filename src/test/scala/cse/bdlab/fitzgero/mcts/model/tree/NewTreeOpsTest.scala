@@ -3,7 +3,8 @@ package cse.bdlab.fitzgero.mcts.model.tree
 import scala.collection.BitSet
 
 import cse.bdlab.fitzgero.mcts.TestTemplate
-import cse.bdlab.fitzgero.mcts.model.observation.Observations.ObservationsDoublePrecision
+import cse.bdlab.fitzgero.mcts.model.observation.Observation
+import cse.bdlab.fitzgero.mcts.model.observation.ObservationOps._
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.MultiChoiceState
 import cse.bdlab.fitzgero.mcts.model.tree.NewTreeOps._
 
@@ -13,9 +14,9 @@ class NewTreeOpsTest extends TestTemplate {
       "called on a leaf" should {
         "turn the leaf into a Branch1" in {
           val maxActions = 2
-          val parentLeaf: NewTree = new NewTree.Leaf(BitSet.empty, new ObservationsDoublePrecision())
+          val parentLeaf: NewTree = new NewTree.Leaf(BitSet.empty, Observation.Empty)
           val childAction = 1
-          val childLeaf: NewTree.Leaf = new NewTree.Leaf(BitSet(1), new ObservationsDoublePrecision())
+          val childLeaf: NewTree.Leaf = new NewTree.Leaf(BitSet(1), Observation.Empty)
           val parentBranch1: NewTree = parentLeaf.addChild(None, childLeaf, childAction, maxActions)
           parentBranch1 match {
             case branch: NewTree.Branch1 =>
@@ -31,13 +32,13 @@ class NewTreeOpsTest extends TestTemplate {
         "turn the Branch1 into a BranchN" in {
           val maxActions = 4
           val parentState: MultiChoiceState = BitSet.empty
-          val parentObs = new ObservationsDoublePrecision(10.0, 0, 10.0, 10)
+          val parentObs = new Observation.AccumulatedMean(10.0, 0, 10.0, 10)
           val child1State = BitSet.empty
           val child1Action = 1
-          val child1Obs = new ObservationsDoublePrecision(1.0, 0, 1, 1)
+          val child1Obs = new Observation.AccumulatedMean(1.0, 0, 1, 1)
           val child1 = new NewTree.Leaf(child1State, child1Obs)
           val child2State = BitSet.empty
-          val child2 = new NewTree.Leaf(child2State, new ObservationsDoublePrecision())
+          val child2 = new NewTree.Leaf(child2State, Observation.Empty)
           val child2Action = 2
           val parentBranch1: NewTree = new NewTree.Branch1(parentState, parentObs, child1Action, child1)
           val parentBranchN: NewTree = parentBranch1.addChild(None, child2, child2Action, maxActions)
@@ -63,7 +64,7 @@ class NewTreeOpsTest extends TestTemplate {
                     case leaf: NewTree.Leaf =>
                       leaf.state should equal(child2State)
                       // no observations for new child
-                      leaf.observations.count should equal(0)
+                      leaf.observations.visits should equal(0)
                     case other => fail(s"child 2 should be a leaf but found $other")
                   }
                 case None => fail("child 2 had action #2 but is missing")

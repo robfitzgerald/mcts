@@ -7,8 +7,8 @@ import cse.bdlab.fitzgero.mcts.model.state.combinatorial.MultiChoice
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.MultiChoiceStateOps._
 import cse.bdlab.fitzgero.mcts.model.tree.NewTree
 import cse.bdlab.fitzgero.mcts.model.value.ValueFunction
-import cse.bdlab.fitzgero.mcts.model.observation.Observations
-import cse.bdlab.fitzgero.mcts.model.observation.ObservationsOps._
+import cse.bdlab.fitzgero.mcts.model.observation.Observation
+import cse.bdlab.fitzgero.mcts.model.observation.ObservationOps._
 
 class BackupTest extends TestTemplate {
 
@@ -24,14 +24,14 @@ class BackupTest extends TestTemplate {
         "update the observations and values of the root" in {
           val rootState = BitSet()
 
-          val rootTree = new NewTree.Leaf(rootState, new Observations.ObservationsDoublePrecision())
+          val rootTree = new NewTree.Leaf(rootState, new Observation.AccumulatedMean())
 
           val observation = 123.345
           val observedState = BitSet(1)
           val vfn = new ValueFunction.PedrosoRei()
           Backup(List(rootTree), observation, observedState, vfn)
 
-          rootTree.observations.count should equal (1)
+          rootTree.observations.visits should equal (1)
           rootTree.observations.max should equal(observation)
           rootTree.observations.mean should equal(observation)
           rootTree.observations.min should equal(observation)
@@ -48,10 +48,10 @@ class BackupTest extends TestTemplate {
           val rootState = BitSet()
 
           val firstChildState = BitSet().addChoiceToState(mc.statePartitionOffsets, 0, 1)
-          val firstChild = new NewTree.Leaf(firstChildState, new Observations.ObservationsDoublePrecision())
+          val firstChild = new NewTree.Leaf(firstChildState, Observation.Empty)
           val secondChildState = BitSet().addChoiceToState(mc.statePartitionOffsets, 0, 2)
-          val secondChild = new NewTree.Leaf(secondChildState,  new Observations.ObservationsDoublePrecision())
-          val rootTree = new NewTree.BranchN(rootState, new Observations.ObservationsDoublePrecision(), Array(None, Some(firstChild), Some(secondChild)))
+          val secondChild = new NewTree.Leaf(secondChildState,  Observation.Empty)
+          val rootTree = new NewTree.BranchN(rootState, Observation.Empty, Array(None, Some(firstChild), Some(secondChild)))
 
           val firstObservation = 10.0
           val secondObservation = 20.0
@@ -65,21 +65,24 @@ class BackupTest extends TestTemplate {
           vfn.globalMinState should equal(firstChildState)
 
           rootTree.observations match {
-            case obs: Observations.ObservationsDoublePrecision =>
+            case obs: Observation.AccumulatedMean =>
               obs.observationsSum should equal (30.0)
+              obs.observedMin should equal (10.0)
+              obs.observedMax should equal (20.0)
               obs.count should equal (2)
+            case _ => fail("should have an accumulated mean observation representation")
           }
 
           firstChild.observations match {
-            case obs: Observations.ObservationsDoublePrecision =>
-              obs.observationsSum should equal (firstObservation)
-              obs.count should equal (1)
+            case obs: Observation.Single =>
+              obs.observation should equal (firstObservation)
+            case _ => fail("should have a Single observation representation")
           }
 
           secondChild.observations match {
-            case obs: Observations.ObservationsDoublePrecision =>
-              obs.observationsSum should equal (secondObservation)
-              obs.count should equal (1)
+            case obs: Observation.Single =>
+              obs.observation should equal (secondObservation)
+            case _ => fail("should have a Single observation representation")
           }
         }
       }

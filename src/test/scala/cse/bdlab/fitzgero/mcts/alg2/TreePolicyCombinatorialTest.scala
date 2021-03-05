@@ -5,8 +5,8 @@ import scala.collection.BitSet
 import cats.Monoid
 
 import cse.bdlab.fitzgero.mcts.TestTemplate
-import cse.bdlab.fitzgero.mcts.model.observation.{Observations, ObservationsOps}
-import cse.bdlab.fitzgero.mcts.model.observation.ObservationsOps._
+import cse.bdlab.fitzgero.mcts.model.observation.Observation
+import cse.bdlab.fitzgero.mcts.model.observation.ObservationOps._
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.MultiChoice
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.MultiChoiceStateOps._
 import cse.bdlab.fitzgero.mcts.model.tree.NewTree
@@ -32,18 +32,17 @@ class TreePolicyCombinatorialTest extends TestTemplate {
       }
       "called on a search tree which is full" should {
         "return a path which includes the root and the higher-value child" in {
-          val m: Monoid[Observations.ObservationsDoublePrecision] = ObservationsOps.ObsDoubleMonoid
           val actions                                             = 2
           val problem: Array[Int]                                 = Array(actions)
           val mc                                                  = MultiChoice(problem)
 
           val firstChildAction = 0
           val firstChildState  = BitSet().addChoiceToState(mc.statePartitionOffsets, 0, 0)
-          val firstChild       = new NewTree.Leaf(firstChildState, m.empty)
+          val firstChild       = new NewTree.Leaf(firstChildState, Observation.Empty)
 
           val secondChildAction = 1
           val secondChildState  = BitSet().addChoiceToState(mc.statePartitionOffsets, 0, 1)
-          val secondChild       = new NewTree.Leaf(secondChildState, m.empty)
+          val secondChild       = new NewTree.Leaf(secondChildState, Observation.Empty)
 
           val rootTree: NewTree = NewTree.createRoot(actions)
           rootTree
@@ -68,17 +67,17 @@ class TreePolicyCombinatorialTest extends TestTemplate {
       }
       "called on a search tree which can be expanded from a leaf (vertical)" should {
         "return a path which includes the root, the higher-value root child, and a new node" in {
-          val m: Monoid[Observations.ObservationsDoublePrecision] = ObservationsOps.ObsDoubleMonoid
+//          val m: Monoid[Observation] = ObservationOps.ObservationMonoid
           val problem: Array[Int]                                 = Array(2, 1)
           val mc: MultiChoice                                     = MultiChoice.apply(actions = problem)
 
           val firstChildAction = 0
           val firstChildState  = BitSet().addChoiceToState(mc.statePartitionOffsets, 0, 0)
-          val firstChild       = new NewTree.Leaf(firstChildState, m.empty)
+          val firstChild       = new NewTree.Leaf(firstChildState, Observation.Empty)
 
           val secondChildAction = 1
           val secondChildState  = BitSet().addChoiceToState(mc.statePartitionOffsets, 0, 1)
-          val secondChild       = new NewTree.Leaf(secondChildState, m.empty)
+          val secondChild       = new NewTree.Leaf(secondChildState, Observation.Empty)
 
           var rootTree: NewTree = NewTree.createRoot(2)
           rootTree = rootTree
@@ -110,18 +109,17 @@ class TreePolicyCombinatorialTest extends TestTemplate {
       }
       "called on a tree with unexplored children" should {
         "return a path which includes the root and a newly-instantiated child" in {
-          val m: Monoid[Observations.ObservationsDoublePrecision] = ObservationsOps.ObsDoubleMonoid
           val actions                                             = 5
           val problem: Array[Int]                                 = Array(actions)
           val mc                                                  = MultiChoice(problem)
 
           val firstChildAction = 1
           val firstChildState  = BitSet().addChoiceToState(mc.statePartitionOffsets, 0, 1)
-          val firstChild       = new NewTree.Leaf(firstChildState, m.empty)
+          val firstChild       = new NewTree.Leaf(firstChildState, Observation.Empty)
 
           val secondChildAction = 2
           val secondChildState  = BitSet().addChoiceToState(mc.statePartitionOffsets, 0, 2)
-          val secondChild       = new NewTree.Leaf(secondChildState, m.empty)
+          val secondChild       = new NewTree.Leaf(secondChildState, Observation.Empty)
 
           var rootTree: NewTree = NewTree.createRoot(actions)
           rootTree = rootTree

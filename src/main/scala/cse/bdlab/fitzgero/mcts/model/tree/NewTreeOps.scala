@@ -1,7 +1,7 @@
 package cse.bdlab.fitzgero.mcts.model.tree
 
-import cse.bdlab.fitzgero.mcts.model.observation.Observations
-import cse.bdlab.fitzgero.mcts.model.observation.ObservationsOps._
+import cse.bdlab.fitzgero.mcts.model.observation.Observation
+import cse.bdlab.fitzgero.mcts.model.observation.ObservationOps._
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.MultiChoiceState
 import cse.bdlab.fitzgero.mcts.model.value.ValueFunction
 import cse.bdlab.fitzgero.mcts.model.value.ValueFunctionOps._
@@ -21,7 +21,7 @@ object NewTreeOps {
       case n: NewTree.BranchN      => n.state
     }
 
-    def observations: Observations = newTree match {
+    def observations: Observation = newTree match {
       case leaf: NewTree.Leaf      => leaf.observations
       case branch: NewTree.Branch1 => branch.observations
       case n: NewTree.BranchN      => n.observations
@@ -36,11 +36,11 @@ object NewTreeOps {
       // update the local observation
       newTree match {
         case leaf: NewTree.Leaf =>
-          leaf.observations.update(observation)
+          leaf.observations = leaf.observations.update(observation)
         case branch: NewTree.Branch1 =>
-          branch.observations.update(observation)
-        case n: NewTree.BranchN =>
-          n.observations.update(observation)
+          branch.observations = branch.observations.update(observation)
+        case branchN: NewTree.BranchN =>
+          branchN.observations = branchN.observations.update(observation)
       }
     }
 

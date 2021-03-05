@@ -5,8 +5,8 @@ import scala.util.Random
 import cats.Monoid
 
 import cse.bdlab.fitzgero.mcts.alg2.TreePolicyCombinatorial
-import cse.bdlab.fitzgero.mcts.model.observation.Observations.ObservationsDoublePrecision
-import cse.bdlab.fitzgero.mcts.model.observation.ObservationsOps
+import cse.bdlab.fitzgero.mcts.model.observation.Observation
+import cse.bdlab.fitzgero.mcts.model.observation.ObservationOps
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.MultiChoiceStateOps._
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.{MultiChoice, MultiChoiceState}
 import cse.bdlab.fitzgero.mcts.model.tree.NewTree
@@ -20,7 +20,7 @@ class MCTS2Test extends TestTemplate {
     "uctSearch" when {
       "called with a simple combinatorial problem" should {
         "search the problem for an optimum" in {
-          implicit val m: Monoid[ObservationsDoublePrecision] = ObservationsOps.ObsDoubleMonoid
+          implicit val m: Monoid[Observation] = ObservationOps.ObservationMonoid
 
           val random = Random
 

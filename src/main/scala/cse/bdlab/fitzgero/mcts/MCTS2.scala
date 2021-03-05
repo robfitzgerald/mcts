@@ -3,7 +3,7 @@ package cse.bdlab.fitzgero.mcts
 import cats.Monoid
 
 import cse.bdlab.fitzgero.mcts.alg2.{Backup, TreePolicyCombinatorial, TreePolicyResult}
-import cse.bdlab.fitzgero.mcts.model.observation.Observations
+import cse.bdlab.fitzgero.mcts.model.observation.Observation
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.{MultiChoice, MultiChoiceState}
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.MultiChoiceStateOps._
 import cse.bdlab.fitzgero.mcts.model.tree.NewTree
@@ -28,7 +28,7 @@ object MCTS2 {
     * @tparam O observation type
     * @return either the search tree, or, an error
     */
-  def uctSearch[O <: Observations](
+  def uctSearch[O <: Observation](
     actions                : Array[Int],
     evaluation             : MultiChoiceState => Double,
     defaultPolicy          : MultiChoiceState => MultiChoiceState,

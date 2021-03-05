@@ -3,7 +3,7 @@ lazy val scala211 = "2.11.12"
 lazy val supportedScalaVersions = List("2.12.10", "2.11.12")
 
 ThisBuild / organization := "cse.bdlab"
-ThisBuild / version      := "1.3.1"
+ThisBuild / version      := "1.4.0"
 ThisBuild / scalaVersion := "2.12.10"
 
 lazy val root = (project in file("."))

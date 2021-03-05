@@ -4,7 +4,7 @@ import scala.annotation.tailrec
 
 import cats.Monoid
 
-import cse.bdlab.fitzgero.mcts.model.observation.Observations
+import cse.bdlab.fitzgero.mcts.model.observation.Observation
 import cse.bdlab.fitzgero.mcts.model.state.combinatorial.{MultiChoice, MultiChoiceState}
 import cse.bdlab.fitzgero.mcts.model.tree.NewTree
 import cse.bdlab.fitzgero.mcts.model.tree.NewTreeOps._
@@ -31,7 +31,7 @@ final case class TreePolicyCombinatorial(
     *   if v not fully expanded then return EXPAND(v)
     *   else v ← BESTCHILD(v, Cp) return v
     */
-  def run[O <: Observations](root: NewTree, vfn: ValueFunction[MultiChoiceState])(
+  def run[O <: Observation](root: NewTree, vfn: ValueFunction[MultiChoiceState])(
     implicit m: Monoid[O]
   ): TreePolicyResult = {
 
