@@ -9,26 +9,27 @@ import cse.bdlab.fitzgero.mcts.algorithm.samplingpolicy.scalar.UCTScalarStandard
 import cse.bdlab.fitzgero.mcts.algorithm.treepolicy.StandardTreePolicy
 import cse.bdlab.fitzgero.mcts.tree._
 
-trait StandardMCTS[S,A] extends MonteCarloTreeSearch[S,A]
-                        with StandardBestChild[S,A]
-                        with StandardTreePolicy[S,A]
-                        with StandardDefaultPolicy[S,A]
-                        with StandardBackup[S,A]
-                        with StandardExpand[S,A] {
+trait StandardMCTS[S, A]
+    extends MonteCarloTreeSearch[S, A]
+    with StandardBestChild[S, A]
+    with StandardTreePolicy[S, A]
+    with StandardDefaultPolicy[S, A]
+    with StandardBackup[S, A]
+    with StandardExpand[S, A] {
 
-  final override type Reward = Double
-  final override type Update = Double
+  final override type Reward       = Double
+  final override type Update       = Double
   final override type Coefficients = UCTScalarStandardReward.Coefficients
 
-  final override def rewardOrdering: Ordering[Double] = scala.math.Ordering.Double
+  final override def rewardOrdering: Ordering[Double] = scala.math.Ordering.Double.TotalOrdering
 
-  final override type Tree = MCTreeStandardReward[S,A]
+  final override type Tree = MCTreeStandardReward[S, A]
 
   final override def startNode(s: S): MCTreeStandardReward[S, A] = MCTreeStandardReward(s)
 
   final override def createNewNode(state: S, action: Option[A]): MCTreeStandardReward[S, A] =
     MCTreeStandardReward(state, action)
 
-  override def updateMetaData(simulationResult: Double, node: Tree, state: S): Coefficients = getSearchCoefficients(node)
+  override def updateMetaData(simulationResult: Double, node: Tree, state: S): Coefficients =
+    getSearchCoefficients(node)
 }
-

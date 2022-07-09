@@ -1,7 +1,5 @@
 package cse.bdlab.fitzgero.mcts.tree
 
-import scala.collection.GenMap
-
 /**
   * a base trait that describes a node in a monte carlo tree
   * @tparam S a state type
@@ -11,8 +9,7 @@ import scala.collection.GenMap
   * @tparam C a coefficient type, which can be used to guide updates
   * @tparam N the derived type (F-Bounded Polymorphic type)
   */
-trait MonteCarloTree[S,A,R,U,C,N <: MonteCarloTree[S,A,R,U,C,N]] extends Serializable {
-
+trait MonteCarloTree[S, A, R, U, C, N <: MonteCarloTree[S, A, R, U, C, N]] extends Serializable {
 
   /////////////////////////////////
   ////// user defined values //////
@@ -20,16 +17,14 @@ trait MonteCarloTree[S,A,R,U,C,N <: MonteCarloTree[S,A,R,U,C,N]] extends Seriali
   def state: S
   def action: Option[A]
 
-
   ////////////////////////////
   ////// internal state //////
   // these change through regular tree operations
-  var visits: Long = 0
-  var children: Option[GenMap[A, () => N]] = None
-  var parent: () => Option[N] = () => None
+  var visits: Long                      = 0
+  var children: Option[Map[A, () => N]] = None
+  var parent: () => Option[N]           = () => None
   // this can change if we combine trees
   var depth: Int = 0
-
 
   ///////////////////////////////////////////////
   ////// implemented by tree variant class //////
@@ -84,7 +79,7 @@ trait MonteCarloTree[S,A,R,U,C,N <: MonteCarloTree[S,A,R,U,C,N]] extends Seriali
         node.setParent(this.asInstanceOf[N])
         children match {
           case None =>
-            this.children = Some(GenMap(a -> (() => node)))
+            this.children = Some(Map(a -> (() => node)))
             ()
           case Some(childrenToUpdate) =>
             this.children = Some(childrenToUpdate.updated(a, () => node))
@@ -97,7 +92,7 @@ trait MonteCarloTree[S,A,R,U,C,N <: MonteCarloTree[S,A,R,U,C,N]] extends Seriali
     * children nodes are wrapped in a closure. this function unpacks them for the user. created while sorting out a type error.
     * @return
     */
-  def childrenNodes: GenMap[A, N] =
+  def childrenNodes: Map[A, N] =
     children match {
       case None => Map()
       case Some(childrenClosure) =>
@@ -106,21 +101,18 @@ trait MonteCarloTree[S,A,R,U,C,N <: MonteCarloTree[S,A,R,U,C,N]] extends Seriali
         } yield (tuple._1, tuple._2())
     }
 
-
-  def hasChildren: Boolean = children.nonEmpty
+  def hasChildren: Boolean   = children.nonEmpty
   def hasNoChildren: Boolean = children.isEmpty
-
-
 
   /**
     * composes a single line of tree data
     * @return
     */
   override def toString: String = {
-    val leadIn = if (depth == 0) "" else s"$depth${ " " * depth }"
+    val leadIn   = if (depth == 0) "" else s"$depth${" " * depth}"
     val nodeType = if (depth == 0) "root" else if (children.isEmpty) "leaf" else "brch"
     val actionUsed = action match {
-      case None => ""
+      case None    => ""
       case Some(a) => s"   $a"
     }
     s"$leadIn$nodeType$actionUsed   $treeSpecificPrintData\n"
@@ -147,13 +139,10 @@ trait MonteCarloTree[S,A,R,U,C,N <: MonteCarloTree[S,A,R,U,C,N]] extends Seriali
           case None => ""
           case Some(childrenUnpacked) =>
             childrenUnpacked
-              .map {c => c._2().printTree(printDepth)}
+              .map { c => c._2().printTree(printDepth) }
               .mkString("")
         }
       }
     toString + childrenStrings
   }
 }
-
-
-

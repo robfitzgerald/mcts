@@ -10,17 +10,18 @@ import cse.bdlab.fitzgero.mcts.algorithm.samplingpolicy.scalar.UCTScalarPedrosoR
 import cse.bdlab.fitzgero.mcts.algorithm.treepolicy.StandardTreePolicy
 import cse.bdlab.fitzgero.mcts.tree._
 
-trait PedrosoReiMCTS[S,A] extends MonteCarloTreeSearch[S,A]
-                        with StandardBestChild[S,A]
-                        with StandardTreePolicy[S,A]
-                        with StandardDefaultPolicy[S,A]
-                        with StandardBackup[S,A]
-                        with StandardExpand[S,A] {
+trait PedrosoReiMCTS[S, A]
+    extends MonteCarloTreeSearch[S, A]
+    with StandardBestChild[S, A]
+    with StandardTreePolicy[S, A]
+    with StandardDefaultPolicy[S, A]
+    with StandardBackup[S, A]
+    with StandardExpand[S, A] {
 
   def objective: Objective
 
-  final override type Reward = Double
-  final override type Update = BigDecimal
+  final override type Reward       = Double
+  final override type Update       = BigDecimal
   final override type Coefficients = UCTScalarPedrosoReiReward.Coefficients
 
   // these are updated by updateSearchCoefficients in the implementing class
@@ -38,25 +39,33 @@ trait PedrosoReiMCTS[S,A] extends MonteCarloTreeSearch[S,A]
     */
   var nodesCreated: Long = 0
 
-  final override def rewardOrdering: Ordering[Reward] = scala.math.Ordering.Double
+  final override def rewardOrdering: Ordering[Reward] = scala.math.Ordering.Double.TotalOrdering
 
-  final override type Tree = MCTreePedrosoReiReward[S,A]
+  final override type Tree = MCTreePedrosoReiReward[S, A]
 
-  final override def startNode(s: S): MCTreePedrosoReiReward[S, A] = MCTreePedrosoReiReward(s, None, objective = objective)
+  final override def startNode(s: S): MCTreePedrosoReiReward[S, A] =
+    MCTreePedrosoReiReward(s, None, objective = objective)
 
   final override def createNewNode(state: S, action: Option[A]): MCTreePedrosoReiReward[S, A] = {
     nodesCreated += 1
     MCTreePedrosoReiReward(state, action, objective)
   }
 
-
-  final override def updateMetaData(simulationResult: Update, node: Tree, leafState: S): Coefficients = {
-    if (objective.isWorseThan(simulationResult, globalWorstSimulation)) globalWorstSimulation = simulationResult
+  final override def updateMetaData(
+    simulationResult: Update,
+    node: Tree,
+    leafState: S
+  ): Coefficients = {
+    if (objective.isWorseThan(simulationResult, globalWorstSimulation))
+      globalWorstSimulation = simulationResult
     if (objective.isBetterThanOrEqualTo(simulationResult, globalBestSimulation)) {
       bestSolution = leafState
       globalBestSimulation = simulationResult
     }
-    UCTScalarPedrosoReiReward.Coefficients(getSearchCoefficients(node).Cp, globalBestSimulation, globalWorstSimulation)
+    UCTScalarPedrosoReiReward.Coefficients(
+      getSearchCoefficients(node).Cp,
+      globalBestSimulation,
+      globalWorstSimulation
+    )
   }
 }
-
